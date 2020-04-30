@@ -25,6 +25,8 @@ dependencies {
     // Use the Kotlin JDK 8 standard library.
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
+    implementation("com.alibaba:easyexcel:2.2.3")
+
     // Use the Kotlin test library.
     testImplementation("org.jetbrains.kotlin:kotlin-test")
 
@@ -34,5 +36,23 @@ dependencies {
 
 application {
     // Define the main class for the application
-    mainClassName = "ForLove.AppKt"
+    mainClassName = "com.github.hunter524.forlove.AppKt"
+}
+
+// fat jar
+// https://docs.gradle.org/current/userguide/working_with_files.html#sec:creating_uber_jar_example
+tasks.register<Jar>("fatJar") {
+
+    manifest {
+        attributes("Main-Class" to "com.github.hunter524.forlove.AppKt")
+    }
+
+    archiveClassifier.set("fat")
+
+    from(sourceSets.main.get().output)
+
+    dependsOn(configurations.runtimeClasspath)
+    from({
+        configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
+    })
 }

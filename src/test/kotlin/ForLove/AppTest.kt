@@ -3,6 +3,7 @@
  */
 package ForLove
 
+import com.github.hunter524.forlove.App
 import kotlin.test.Test
 import kotlin.test.assertNotNull
 
