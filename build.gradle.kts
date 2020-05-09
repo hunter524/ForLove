@@ -53,7 +53,9 @@ application {
 }
 
 
-// fat jar
+// fat-jar/uber-jar
+// 相同意思 均为包含被依赖的 jar 一个 jar
+// uber 原为德语 意为 above over 超过 simple 只包含当前项目 jar 的 jar
 // https://docs.gradle.org/current/userguide/working_with_files.html#sec:creating_uber_jar_example
 tasks.register<Jar>("fatJar") {
 
@@ -70,3 +72,32 @@ tasks.register<Jar>("fatJar") {
         configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
     })
 }
+
+// 分析task 被多次执行的原因 A->C B->C
+// 同时执行 A B 任务 C 只被执行了一次
+tasks.create("A"){
+    doFirst{
+        println("A")
+    }
+}
+
+tasks.create("B"){
+    doFirst{
+        println("B")
+    }
+}
+
+tasks.create("C"){
+    doFirst{
+        println("C")
+    }
+}
+
+
+
+afterEvaluate{
+    tasks.getByName("A").dependsOn("C")
+    tasks.getByName("B").dependsOn("C")
+
+}
+
