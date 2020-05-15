@@ -3,13 +3,26 @@
  */
 package com.github.hunter524.forlove
 
+import java.net.URLDecoder
+
 class App {
     val greeting: String
         get() {
             return "Hello world."
         }
 }
-
 fun main(args: Array<String>) {
     println(App().greeting)
+    println("Thread is Daemon :${Thread.currentThread().isDaemon}")
+
+    var thread = Thread {
+        while (true) {
+            runCatching {
+                Thread.sleep(1000)
+            }
+        }
+    }
+//    thread.isDaemon = true
+    thread.isDaemon = false
+    thread.start()
 }
