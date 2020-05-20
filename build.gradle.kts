@@ -9,11 +9,13 @@ println("load buile.gradle.kts")
 /**
  * gradle assemble 命令在kotlin java 项目中可以构建所有产品 zip tar jar xxx.sh xxx.bat
  * 其中tar zip 文件解压 既可以通过运行 其bin 目录中的 .bat .sh 脚本即可以运行该项目
- *
+ * IV scan report :https://gradle.com/s/cuy3ka3cnt5oq  https://gradle.com/s/g5jjmmj4yjg5s
  */
 plugins {
     // Apply the Kotlin JVM plugin to add support for Kotlin.
     id("org.jetbrains.kotlin.jvm") version "1.3.41"
+//    scan 组件不需要显示声明 scan 依赖
+//    id("com.gradle.build-scan").version("3.3.1")
     // Apply the application plugin to add support for building a CLI application.
     application
 }
