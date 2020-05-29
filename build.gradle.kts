@@ -18,12 +18,14 @@ plugins {
 //    id("com.gradle.build-scan").version("3.3.1")
     // Apply the application plugin to add support for building a CLI application.
     application
+    `maven-publish`
+    maven
+    idea
 }
 
-apply{
+apply {
     type(BuildSrcPlugin::class)
 }
-
 
 
 repositories {
@@ -77,32 +79,40 @@ tasks.register<Jar>("fatJar") {
 
 // 分析task 被多次执行的原因 A->C B->C
 // 同时执行 A B 任务 C 只被执行了一次
-tasks.create("A"){
-    doFirst{
+tasks.create("A") {
+    doFirst {
         println("A")
     }
 }
 
-tasks.create("B"){
-    doFirst{
+tasks.create("B") {
+    doFirst {
         println("B")
     }
 }
 
-tasks.create("C"){
-    doFirst{
+tasks.create("C") {
+    doFirst {
         println("C")
     }
 }
 
-
-
-afterEvaluate{
+tasks.create("D") {
+    doFirst {
+        println("D")
+    }
+}
+// 同时运行 A B C 任务时 Task 的运行顺序生效
+// 只运行 C 任务时 A B 不运行
+// 建立下述 依赖关系之后 运行 A 任务 B C 任务也均会被运行 (B->C->A)
+tasks["C"].mustRunAfter(tasks["B"])
+afterEvaluate {
+    tasks.getByName("A").dependsOn("B")
     tasks.getByName("A").dependsOn("C")
-    tasks.getByName("B").dependsOn("C")
+    tasks.getByName("C").dependsOn("D")
+    tasks.getByName("B").dependsOn("D")
 
 }
-
 tasks.create("print") {
     doFirst {
         var sysProperties = System.getProperties()
@@ -117,5 +127,83 @@ tasks.create("print") {
         println("foo: ${project.extensions.extraProperties["ORG_GRADLE_PROJECT_foo"]} " +
                 "foo from project#properties:${project.properties["ORG_GRADLE_PROJECT_foo"]}")
 
+    }
+}
+
+//扩展方法结合编译器魔法,实现 provideDelegate 委托属性的创建
+val taskCreateByBy by tasks.registering {
+    doFirst {
+        println("taskCreate By By!")
+    }
+    doLast {
+        println("Property from task: ${this.extra["p"]}")
+    }
+}
+// task#extensions#extraProperties (扩展方法委托至该字段)
+// 该属性每个 Task 均有自己的 Extensions
+tasks["taskCreateByBy"].extra["p"] = "v"
+
+//创建指定类型的task并且返回的数据为 TaskProvider
+//并且指定创建的 Task 类型为 Copy 类型
+//创建该 task 的闭包内部使用的 from into 还是处于配置该类型的task阶段
+//外层 into 指定更目录,内层目录使用 /开始 为相对外层根目录的子目录
+
+var taskProvider = tasks.register<Copy>("copySub") {
+
+    from(file("/home/hunter/IdeaProjects/ForLove/src/main/kotlin/com/github/hunter524/forlove/App.kt")) {
+        into(file("/src"))
+    }
+
+    from(file("src/test")) {
+        into(file("/test2"))
+    }
+    into(file("/home/hunter/kl/"))
+}
+println("taskProvider: $taskProvider")
+
+//使用 kotlin 委托属性获取 task (虽然该处的 tasks#getting 不是 Map)
+project.afterEvaluate {
+    val copySub by tasks.existing
+    println("copySub Name:${copySub.name}")
+}
+
+// 验证 Project#file 相关的 api
+tasks {
+    register("file") {
+        doFirst {
+            var gitignore = file(".gitignore")
+            println("git ignore path: ${gitignore.absolutePath}")
+            println("git ignore contents: ${gitignore.readLines()}")
+        }
+    }
+}
+
+// 通过 Annotation 注解定义的 uptodate 任务
+// 执行完一次 该任务后更改 .gitignore 会导致 up-to-date 失效,该任务重新运行
+tasks.register("uptodate", UptodateTask::class, File("/home/hunter/IdeaProjects/ForLove/.gitignore"), File("/home/hunter/IdeaProjects/ForLove/.gitignore"))
+open class UptodateTask @javax.inject.Inject constructor(@get:org.gradle.api.tasks.InputFile val input: File, @get:org.gradle.api.tasks.OutputFile val outPut: File) : DefaultTask() {
+
+    @org.gradle.api.tasks.TaskAction
+    fun printExe() {
+        println("UptodateTask printExe")
+    }
+}
+
+// 通过运行时 api 定义 增量构建任务
+tasks.register("rtUptodate",DefaultTask::class){
+    doFirst{
+        println("rtUptodate executed")
+    }
+    outputs.file("/home/hunter/IdeaProjects/ForLove/.gitignore")
+    inputs.file("/home/hunter/IdeaProjects/ForLove/.gitignore")
+}
+
+// 自行进行 up-to-date 检测，有该文件即可认为up-to-date
+tasks.register("selfCheckUptoDate"){
+    outputs.upToDateWhen {
+        file("uptodate.cfg").exists()
+    }
+    doFirst{
+        println("selfCheckUptoDate Executed")
     }
 }

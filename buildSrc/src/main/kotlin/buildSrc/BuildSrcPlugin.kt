@@ -8,6 +8,8 @@ import org.gradle.api.Plugin
 
 /**
  * A simple 'hello world' plugin.
+ * 插件项目目录 resources 目录下建立 <plugin_name>.properties 文件其中内置:implementation-class=<package.classname>属性用于指向
+ * 插件的实现类
  */
 class BuildSrcPlugin: Plugin<Project> {
     override fun apply(project: Project) {

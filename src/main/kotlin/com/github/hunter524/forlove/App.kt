@@ -14,7 +14,8 @@ class App {
 fun main(args: Array<String>) {
     println(App().greeting)
     println("Thread is Daemon :${Thread.currentThread().isDaemon}")
-
+    var zeroChar = '0'
+    println("Show Hex:${Integer.toHexString(zeroChar.toInt())}")
     var thread = Thread {
         while (true) {
             runCatching {
@@ -25,4 +26,5 @@ fun main(args: Array<String>) {
 //    thread.isDaemon = true
     thread.isDaemon = false
     thread.start()
+
 }
