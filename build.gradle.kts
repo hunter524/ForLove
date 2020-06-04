@@ -62,6 +62,7 @@ application {
 // 相同意思 均为包含被依赖的 jar 一个 jar
 // uber 原为德语 意为 above over 超过 simple 只包含当前项目 jar 的 jar
 // https://docs.gradle.org/current/userguide/working_with_files.html#sec:creating_uber_jar_example
+// 通过 jar 任务 解压被依赖的 jar 文件，将 jar 中的内容拷贝到当前生成的 jar 文件中
 tasks.register<Jar>("fatJar") {
 
     manifest {
@@ -146,25 +147,70 @@ tasks["taskCreateByBy"].extra["p"] = "v"
 //创建指定类型的task并且返回的数据为 TaskProvider
 //并且指定创建的 Task 类型为 Copy 类型
 //创建该 task 的闭包内部使用的 from into 还是处于配置该类型的task阶段
-//外层 into 指定更目录,内层目录使用 /开始 为相对外层根目录的子目录
+//外层 into 指定根目录,内层目录使用 /开始 为相对外层根目录的子目录
+// 使用相对目录则是转化为绝对目录，再使用绝对目录相对于 into 的根目录进行复制操作
 
 var taskProvider = tasks.register<Copy>("copySub") {
 
     from(file("/home/hunter/IdeaProjects/ForLove/src/main/kotlin/com/github/hunter524/forlove/App.kt")) {
+//        into(file("src"))
         into(file("/src"))
     }
 
     from(file("src/test")) {
+//        into(file("test2"))
         into(file("/test2"))
     }
     into(file("/home/hunter/kl/"))
 }
-println("taskProvider: $taskProvider")
+
+tasks.register<Zip>("zipSub"){
+//    basename-appedix-version-class.ext
+    archiveBaseName.set("basename")
+    archiveAppendix.set("appedix")
+    archiveVersion.set("0.0.1")
+    archiveClassifier.set("class")
+    archiveExtension.set("ext")
+    destinationDirectory.set(file("ziptest/zip"))
+
+    from("ziptest/src")
+}
+
+//ExtraPropertiesExtension 扩展了 invoke 方法实现为该属性提供一个初始值
+val archivesDirPath by extra { "$buildDir/archives" }
+
+//解压zip 指定目录下的文件进入 ziptest/uzip 目录
+tasks.register<Copy>("unZipSub"){
+    from(zipTree("ziptest/zip/basename-appedix-0.0.1-class.ext")){
+        include("libs/**")
+        eachFile{
+            relativePath = RelativePath(true,*relativePath.segments.drop(1).toTypedArray())
+        }
+        includeEmptyDirs = false
+    }
+    into("ziptest/uzip")
+}
+
+// jar 包实际上就是一个class文件和资源文件的压缩包
+// TODO:// 但是重新压缩文件生成 jar 包无法运行
+tasks.register<Copy>("unZipJar"){
+    from(zipTree("ziptest/jar/javassist-3.27.0-GA.jar"))
+    into("ziptest/uzip")
+}
+
+//TODO:// Any 扩展的 withGroovyBuilder 方法，为 kotlin 提供了 groovy 语法编写脚本的支持
+tasks.register("antTask"){
+    doFirst{
+        ant.withGroovyBuilder {
+            "move"("file" to "${buildDir}/reports", "todir" to "${buildDir}/toArchive")
+        }
+    }
+}
 
 //使用 kotlin 委托属性获取 task (虽然该处的 tasks#getting 不是 Map)
 project.afterEvaluate {
-    val copySub by tasks.existing
-    println("copySub Name:${copySub.name}")
+//    val copySub by tasks.existing
+//    println("copySub Name:${copySub.name}")
 }
 
 // 验证 Project#file 相关的 api
@@ -205,5 +251,54 @@ tasks.register("selfCheckUptoDate"){
     }
     doFirst{
         println("selfCheckUptoDate Executed")
+    }
+}
+
+//批量的根据 Task 名称的规则执行任务，该任务在运行该task之前并不存在，是被根据规则动态创建的
+//如该处的域名则可以根据执行的任务名称动态的获取和更改
+tasks.addRule("Pattern:Ping<ID>"){
+    val taskName = this;
+    if(startsWith("ping")){
+        task(taskName){
+            doLast{
+//                exec{
+//                    commandLine("wget","https://guyuesh2.online:8443")
+//                }
+                println("ping ${this.name.substring(4)}")
+            }
+        }
+    }
+}
+// 依赖的任务也可以根据 Tasks#Rule 动态进行生成
+tasks.register("groupPing"){
+    dependsOn("pingServer1","pingServer2")
+}
+
+//build.gradle script 内部调用的方法会被委托到 Project 对象上进行调用
+//内部的this 指针指向的是 Script 引用
+//(kotlin 为生成的子类继承了 KotlinBuildScript 其通过继承 ProjectDelegate 通过其扩展方法实现了脚本内部方法调用委托到 Project 对象上)
+
+
+println("This From Script type is ${this::class.java} super Class is ${this::class.java.superclass}")
+
+// FileCollection FileTree Api
+
+// 验证一个 FileCollection 可以被惰性求值两次
+// 即 srcDir 改变了 再次迭代 FileCollection 会获得不同的结果
+tasks.register("fileCollection"){
+    doFirst{
+        var srcDir:File?= null
+//        kotlin 该处传递的 Closure 代表一个 Provider
+        val filecl = layout.files ({
+            srcDir?.listFiles()
+        })
+        srcDir = file("src")
+        filecl.map { relativePath(it) }.sorted().forEach { println("lazy dir 1: ${it}") }
+
+        srcDir = file("ziptest")
+        filecl.map { /*relativePath(it)*/ it}.sorted().forEach { println("lazy dir 2: ${it}") }
+
+
+        println("files:${filecl.files} \n toList:${filecl.toList()} \n asPath:${filecl.asPath}")
     }
 }

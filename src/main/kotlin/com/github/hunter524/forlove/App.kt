@@ -3,6 +3,7 @@
  */
 package com.github.hunter524.forlove
 
+import java.io.File
 import java.net.URLDecoder
 
 class App {
@@ -14,8 +15,19 @@ class App {
 fun main(args: Array<String>) {
     println(App().greeting)
     println("Thread is Daemon :${Thread.currentThread().isDaemon}")
-    var zeroChar = '0'
-    println("Show Hex:${Integer.toHexString(zeroChar.toInt())}")
+//    testCWD()
+    testCodePoint()
+}
+
+// 通过相对路径构建 File
+// CWD(current working directory ) 当前工作目录则为当前执行 java 命令运行 jar 包的目录
+// 构建的相对路径的 File 则是相对 CWD 的文件
+fun testCWD() {
+    val file = File("src")
+    println("File AbsolutePath: ${file.absolutePath}")
+}
+
+fun testDaemonThread() {
     var thread = Thread {
         while (true) {
             runCatching {
@@ -26,5 +38,20 @@ fun main(args: Array<String>) {
 //    thread.isDaemon = true
     thread.isDaemon = false
     thread.start()
+}
 
+fun testCodePoint() {
+    var s = "严"
+    var codePointAt = s.codePointAt(0)
+    println("严 codePoint: ${Integer.toHexString(codePointAt)}")
+//    String#getChars 获得即为 Unicode 字符集该字对应的编码
+    s.chars().forEach {
+        println("${Integer.toBinaryString(it)}\n")
+    }
+//    String#getBytes 对应的即为指定编码之后的byte流
+    var byteArray = s.toByteArray()
+    byteArray.forEach {
+        var binaryString = Integer.toBinaryString(it.toInt())
+        println(binaryString.substring(24))
+    }
 }
