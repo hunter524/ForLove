@@ -152,6 +152,7 @@ tasks["taskCreateByBy"].extra["p"] = "v"
 
 var taskProvider = tasks.register<Copy>("copySub") {
 
+//    该种 from 传入闭包的写法称之为 ChildSpec 则与 Copy 任务的主 Spec 是相互隔离的
     from(file("/home/hunter/IdeaProjects/ForLove/src/main/kotlin/com/github/hunter524/forlove/App.kt")) {
 //        into(file("src"))
         into(file("/src"))
@@ -301,4 +302,40 @@ tasks.register("fileCollection"){
 
         println("files:${filecl.files} \n toList:${filecl.toList()} \n asPath:${filecl.asPath}")
     }
+}
+
+tasks.register("fcft"){
+    doLast {
+        var fileCollection = project.files("./")
+        var fileTree = project.fileTree("./").apply{
+            include("**/*.kts")
+        }
+        println("file tree files${fileTree.asPath}")
+        println("file collection files${fileCollection.asPath}")
+
+        fileTree.visit{
+            if(!this.isDirectory){
+                println("File: ${this.name} mode :${Integer.toHexString(this.mode)}")
+            }
+        }
+
+    }
+}
+
+tasks.register<Copy>("cpfilter") {
+    project.delete("copied/Copy_template.txt")
+    from("copy_temp")
+//    groovy 模板模式 语法参见 SimpleTemplateEngine
+//    expand("year" to "2009","month" to "06","day" to true)
+//    ant 模式  @var@
+//    filter(org.apache.tools.ant.filters.ReplaceTokens::class, "tokens" to mapOf("year" to "2009","month" to "06","day" to "day"))
+//    直接按行 Transformer 模式（最灵活，但是编码最复杂) 按行模式加上行号
+    var i =0
+    filter{
+         "==${i++}->${it}"
+    }
+    into("copied")
+}
+
+tasks.register<Copy>("cpcpspec"){
 }

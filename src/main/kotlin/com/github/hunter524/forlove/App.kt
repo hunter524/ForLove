@@ -4,7 +4,8 @@
 package com.github.hunter524.forlove
 
 import java.io.File
-import java.net.URLDecoder
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 class App {
     val greeting: String
@@ -16,7 +17,8 @@ fun main(args: Array<String>) {
     println(App().greeting)
     println("Thread is Daemon :${Thread.currentThread().isDaemon}")
 //    testCWD()
-    testCodePoint()
+//    testCodePoint()
+    testAppendReplace()
 }
 
 // 通过相对路径构建 File
@@ -54,4 +56,16 @@ fun testCodePoint() {
         var binaryString = Integer.toBinaryString(it.toInt())
         println(binaryString.substring(24))
     }
+}
+
+// 用于读取 正则表达式替换后的结果
+fun testAppendReplace(){
+    val p: Pattern = Pattern.compile("cat")
+    val m: Matcher = p.matcher("one cat two cats in the yard")
+    val sb = StringBuffer()
+    while (m.find()) {
+        m.appendReplacement(sb, "dog")
+    }
+    m.appendTail(sb)
+    println(sb.toString())
 }

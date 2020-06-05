@@ -1,0 +1,5 @@
+expand SimpleTemplateEngine Groovy 模板引擎模式
+$year <%= month %> ${ day ? "day":"noday" }
+
+Ant Style 的替换模式
+@year@ @month@ @day@
