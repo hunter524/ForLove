@@ -21,12 +21,31 @@ plugins {
     `maven-publish`
     maven
     idea
+//    buildSrc 项目中定义的插件定义 id,其他项目通过id 引用该插件
+    id("build_src")
 }
 
+
+
+// 插件和脚本的多种添加方式
+// 下述三种方式均可以添加插件和脚本。
+// apply 三种应用：
+// from: 从当前脚本引用其他脚本
+// plugin:向当前项目应用指定插件
+// TODO:// to:目前认为to是指定当前待配置的对象
 apply {
-    type(BuildSrcPlugin::class)
+//    type(BuildSrcPlugin::class)
+//    from("applied.gradle.kts")
+
 }
 
+//apply (from = "applied.gradle.kts")
+apply(mapOf("from" to "applied.gradle.kts"))
+
+java{
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
 
 repositories {
     // Use jcenter for resolving dependencies.
@@ -42,6 +61,9 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
     implementation("com.alibaba:easyexcel:2.2.3")
+
+    implementation("com.squareup.okio:okio:1.11.0")
+    implementation("com.google.guava:guava:19.0")
 
     // Use the Kotlin test library.
     testImplementation("org.jetbrains.kotlin:kotlin-test")
@@ -337,5 +359,11 @@ tasks.register<Copy>("cpfilter") {
     into("copied")
 }
 
-tasks.register<Copy>("cpcpspec"){
+tasks.register("printCfg"){
+    doFirst {
+        var configurations = project.configurations
+        configurations.asMap.forEach { k, v ->
+            println("Key: $k -> Value: $v")
+        }
+    }
 }

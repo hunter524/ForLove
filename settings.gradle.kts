@@ -17,3 +17,9 @@ buildCache{
 }
 
 //includeBuild("../jvmLang")
+//include("sub_prj:sub_sub_prj")
+//includeFlat("jvmLang")
+includeBuild("sub_prj/sub_sub_prj")
+settings.gradle.allprojects{
+    println("iterator all Project Name:${this.name}")
+}

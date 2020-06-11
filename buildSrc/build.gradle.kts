@@ -5,7 +5,9 @@
  * For more details take a look at the Writing Custom Plugins chapter in the Gradle
  * User Manual available at https://docs.gradle.org/5.6.4/userguide/custom_plugins.html
  */
-
+/**
+ * buildSrc 项目可以放置在项目中使用，也可以运行 jar 命令，生成 jar 二进制包提供其插件给其他项目使用
+ */
 plugins {
     // Apply the Java Gradle plugin development plugin to add support for developing Gradle plugins
     `java-gradle-plugin`
@@ -13,7 +15,15 @@ plugins {
     // Apply the Kotlin JVM plugin to add support for Kotlin.
     id("org.jetbrains.kotlin.jvm") version "1.3.41"
 }
-
+//上面 java-gradle-plugin 插件中的配置语法 用于将 buildSrc 中定义的Class 插件命名 id 便于后面使用
+gradlePlugin{
+    plugins{
+        create("build_src"){
+            id="build_src"
+            implementationClass = "buildSrc.BuildSrcPlugin"
+        }
+    }
+}
 repositories {
     // Use jcenter for resolving dependencies.
     // You can declare any Maven/Ivy/file repository here.

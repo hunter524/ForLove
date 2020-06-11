@@ -3,9 +3,12 @@
  */
 package com.github.hunter524.forlove
 
+import com.google.common.primitives.Ints
+import okio.ByteString
 import java.io.File
 import java.util.regex.Matcher
 import java.util.regex.Pattern
+import java.util.zip.CRC32
 
 class App {
     val greeting: String
@@ -19,6 +22,14 @@ fun main(args: Array<String>) {
 //    testCWD()
 //    testCodePoint()
     testAppendReplace()
+
+    println("${encrypt("451795172")}")
+}
+
+private fun encrypt(str: String): String {
+    var crC32time = CRC32()
+    crC32time.update(str.toByteArray())
+    return ByteString.of(*Ints.toByteArray(crC32time.value.toInt())).base64()
 }
 
 // 通过相对路径构建 File
