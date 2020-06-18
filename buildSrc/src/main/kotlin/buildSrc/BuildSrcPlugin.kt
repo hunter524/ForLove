@@ -5,6 +5,11 @@ package buildSrc
 
 import org.gradle.api.Project
 import org.gradle.api.Plugin
+import org.gradle.api.Task
+import org.gradle.api.execution.TaskExecutionListener
+import org.gradle.api.logging.StandardOutputListener
+import org.gradle.api.tasks.TaskState
+import org.slf4j.LoggerFactory
 
 /**
  * A simple 'hello world' plugin.
@@ -12,12 +17,39 @@ import org.gradle.api.Plugin
  * 插件的实现类
  */
 class BuildSrcPlugin: Plugin<Project> {
+    var logger = LoggerFactory.getLogger("BuildSrcPlugin")
+
     override fun apply(project: Project) {
         // Register a task
         project.tasks.register("greeting") { task ->
             task.doLast {
                 println("Hello from plugin 'buildSrc.greeting'")
             }
+            task.doFirst{
+                logger.error("greeting task use slf4j")
+            }
         }
+
+        project.gradle.useLogger(TaskExecutionLogger())
+        project.gradle.useLogger(StandardOutput())
     }
+}
+
+// 生命周期的日志已经被解析
+ class TaskExecutionLogger: TaskExecutionListener{
+     override fun beforeExecute(task: Task) {
+         println("[${task.name}]")
+     }
+
+     override fun afterExecute(task: Task, state: TaskState) {
+         println("after Exe: ${task.state}")
+     }
+ }
+
+//TODO://标准输入输出的日志没有被获取
+class StandardOutput: StandardOutputListener{
+    override fun onOutput(output: CharSequence?) {
+        println("append by standardOutPut: $output")
+    }
+
 }

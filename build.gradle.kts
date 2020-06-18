@@ -67,7 +67,6 @@ dependencies {
 
     // Use the Kotlin test library.
     testImplementation("org.jetbrains.kotlin:kotlin-test")
-
     // Use the Kotlin JUnit integration.
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 }
@@ -364,6 +363,16 @@ tasks.register("printCfg"){
         var configurations = project.configurations
         configurations.asMap.forEach { k, v ->
             println("Key: $k -> Value: $v")
+        }
+    }
+}
+
+//向所有Project 添加同名的task (包括 RootProject 添加同名的task)
+
+allprojects {
+    this.tasks.register("allProjTask"){
+        doFirst{
+            println("Task in ${this.project.name}")
         }
     }
 }

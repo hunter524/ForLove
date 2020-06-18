@@ -8,6 +8,10 @@ import kotlin.test.Test
 import kotlin.test.assertNotNull
 
 class AppTest {
+
+//    IDEA Setting#Build,Execution,Deployment#Gradle#Run test using 中需要选择使用 IDEA
+//    否则只能使用 gradle test 任务运行该测试 无法在 IDEA 中查看测试结果，只会在 build/reports/tests/test 目录下生成 html 的测试报告
+
     @Test fun testAppHasAGreeting() {
         val classUnderTest = App()
         assertNotNull(classUnderTest.greeting, "app should have a greeting")

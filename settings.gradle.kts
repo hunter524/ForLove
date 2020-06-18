@@ -15,11 +15,12 @@ buildCache{
         removeUnusedEntriesAfterDays = 30
     }
 }
+include("other_sub")
 
 //includeBuild("../jvmLang")
-//include("sub_prj:sub_sub_prj")
+include("sub_prj:sub_sub_prj")
 //includeFlat("jvmLang")
-includeBuild("sub_prj/sub_sub_prj")
+//includeBuild("sub_prj/sub_sub_prj")
 settings.gradle.allprojects{
     println("iterator all Project Name:${this.name}")
 }
