@@ -4,6 +4,8 @@
 package com.github.hunter524.forlove
 
 import com.google.common.primitives.Ints
+import javassist.ClassPool
+import jdk.internal.org.objectweb.asm.ClassWriter
 import okio.ByteString
 import java.io.File
 import java.util.regex.Matcher

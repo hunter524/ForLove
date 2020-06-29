@@ -1,4 +1,4 @@
-import buildSrc.BuildSrcPlugin
+
 
 println("load buile.gradle.kts")
 /*
@@ -26,7 +26,6 @@ plugins {
 }
 
 
-
 // 插件和脚本的多种添加方式
 // 下述三种方式均可以添加插件和脚本。
 // apply 三种应用：
@@ -42,7 +41,7 @@ apply {
 //apply (from = "applied.gradle.kts")
 apply(mapOf("from" to "applied.gradle.kts"))
 
-java{
+java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
 }
@@ -51,6 +50,16 @@ repositories {
     // Use jcenter for resolving dependencies.
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
+
+//    //    以名字推测 falt_repo 下面的依赖，优先级最低如果同 maven 等仓库重名会被覆盖
+//    implementation("org.hunter:javassistht:3.27.0-GA") <group_name>-<version_name>.jar
+    flatDir {
+        dirs("flat_repo")
+    }
+}
+
+configurations{
+    create("scm")
 }
 
 dependencies {
@@ -64,11 +73,16 @@ dependencies {
 
     implementation("com.squareup.okio:okio:1.11.0")
     implementation("com.google.guava:guava:19.0")
+//    以名字推测 falt_repo 下面的依赖，优先级最低如果同 maven 等仓库重名会被覆盖
+    implementation("org.hunter:javassistht:3.27.0-GA")
 
     // Use the Kotlin test library.
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     // Use the Kotlin JUnit integration.
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
+// 自定义 scm Configuration 为 Scm 添加对应类型的依赖
+// 可以使用 gradle dependenices --configuration <cfg_name> 查看制定 cfg 的依赖配置
+    "scm" ("org.eclipse.jgit:org.eclipse.jgit:4.9.2.201712150930-r")
 }
 
 application {
@@ -186,7 +200,7 @@ var taskProvider = tasks.register<Copy>("copySub") {
     into(file("/home/hunter/kl/"))
 }
 
-tasks.register<Zip>("zipSub"){
+tasks.register<Zip>("zipSub") {
 //    basename-appedix-version-class.ext
     archiveBaseName.set("basename")
     archiveAppendix.set("appedix")
@@ -202,11 +216,11 @@ tasks.register<Zip>("zipSub"){
 val archivesDirPath by extra { "$buildDir/archives" }
 
 //解压zip 指定目录下的文件进入 ziptest/uzip 目录
-tasks.register<Copy>("unZipSub"){
-    from(zipTree("ziptest/zip/basename-appedix-0.0.1-class.ext")){
+tasks.register<Copy>("unZipSub") {
+    from(zipTree("ziptest/zip/basename-appedix-0.0.1-class.ext")) {
         include("libs/**")
-        eachFile{
-            relativePath = RelativePath(true,*relativePath.segments.drop(1).toTypedArray())
+        eachFile {
+            relativePath = RelativePath(true, *relativePath.segments.drop(1).toTypedArray())
         }
         includeEmptyDirs = false
     }
@@ -215,14 +229,14 @@ tasks.register<Copy>("unZipSub"){
 
 // jar 包实际上就是一个class文件和资源文件的压缩包
 // TODO:// 但是重新压缩文件生成 jar 包无法运行
-tasks.register<Copy>("unZipJar"){
+tasks.register<Copy>("unZipJar") {
     from(zipTree("ziptest/jar/javassist-3.27.0-GA.jar"))
     into("ziptest/uzip")
 }
 
 //TODO:// Any 扩展的 withGroovyBuilder 方法，为 kotlin 提供了 groovy 语法编写脚本的支持
-tasks.register("antTask"){
-    doFirst{
+tasks.register("antTask") {
+    doFirst {
         ant.withGroovyBuilder {
             "move"("file" to "${buildDir}/reports", "todir" to "${buildDir}/toArchive")
         }
@@ -258,8 +272,8 @@ open class UptodateTask @javax.inject.Inject constructor(@get:org.gradle.api.tas
 }
 
 // 通过运行时 api 定义 增量构建任务
-tasks.register("rtUptodate",DefaultTask::class){
-    doFirst{
+tasks.register("rtUptodate", DefaultTask::class) {
+    doFirst {
         println("rtUptodate executed")
     }
     outputs.file("/home/hunter/IdeaProjects/ForLove/.gitignore")
@@ -267,22 +281,22 @@ tasks.register("rtUptodate",DefaultTask::class){
 }
 
 // 自行进行 up-to-date 检测，有该文件即可认为up-to-date
-tasks.register("selfCheckUptoDate"){
+tasks.register("selfCheckUptoDate") {
     outputs.upToDateWhen {
         file("uptodate.cfg").exists()
     }
-    doFirst{
+    doFirst {
         println("selfCheckUptoDate Executed")
     }
 }
 
 //批量的根据 Task 名称的规则执行任务，该任务在运行该task之前并不存在，是被根据规则动态创建的
 //如该处的域名则可以根据执行的任务名称动态的获取和更改
-tasks.addRule("Pattern:Ping<ID>"){
+tasks.addRule("Pattern:Ping<ID>") {
     val taskName = this;
-    if(startsWith("ping")){
-        task(taskName){
-            doLast{
+    if (startsWith("ping")) {
+        task(taskName) {
+            doLast {
 //                exec{
 //                    commandLine("wget","https://guyuesh2.online:8443")
 //                }
@@ -292,8 +306,8 @@ tasks.addRule("Pattern:Ping<ID>"){
     }
 }
 // 依赖的任务也可以根据 Tasks#Rule 动态进行生成
-tasks.register("groupPing"){
-    dependsOn("pingServer1","pingServer2")
+tasks.register("groupPing") {
+    dependsOn("pingServer1", "pingServer2")
 }
 
 //build.gradle script 内部调用的方法会被委托到 Project 对象上进行调用
@@ -307,35 +321,35 @@ println("This From Script type is ${this::class.java} super Class is ${this::cla
 
 // 验证一个 FileCollection 可以被惰性求值两次
 // 即 srcDir 改变了 再次迭代 FileCollection 会获得不同的结果
-tasks.register("fileCollection"){
-    doFirst{
-        var srcDir:File?= null
+tasks.register("fileCollection") {
+    doFirst {
+        var srcDir: File? = null
 //        kotlin 该处传递的 Closure 代表一个 Provider
-        val filecl = layout.files ({
+        val filecl = layout.files({
             srcDir?.listFiles()
         })
         srcDir = file("src")
         filecl.map { relativePath(it) }.sorted().forEach { println("lazy dir 1: ${it}") }
 
         srcDir = file("ziptest")
-        filecl.map { /*relativePath(it)*/ it}.sorted().forEach { println("lazy dir 2: ${it}") }
+        filecl.map { /*relativePath(it)*/ it }.sorted().forEach { println("lazy dir 2: ${it}") }
 
 
         println("files:${filecl.files} \n toList:${filecl.toList()} \n asPath:${filecl.asPath}")
     }
 }
 
-tasks.register("fcft"){
+tasks.register("fcft") {
     doLast {
         var fileCollection = project.files("./")
-        var fileTree = project.fileTree("./").apply{
+        var fileTree = project.fileTree("./").apply {
             include("**/*.kts")
         }
         println("file tree files${fileTree.asPath}")
         println("file collection files${fileCollection.asPath}")
 
-        fileTree.visit{
-            if(!this.isDirectory){
+        fileTree.visit {
+            if (!this.isDirectory) {
                 println("File: ${this.name} mode :${Integer.toHexString(this.mode)}")
             }
         }
@@ -351,14 +365,14 @@ tasks.register<Copy>("cpfilter") {
 //    ant 模式  @var@
 //    filter(org.apache.tools.ant.filters.ReplaceTokens::class, "tokens" to mapOf("year" to "2009","month" to "06","day" to "day"))
 //    直接按行 Transformer 模式（最灵活，但是编码最复杂) 按行模式加上行号
-    var i =0
-    filter{
-         "==${i++}->${it}"
+    var i = 0
+    filter {
+        "==${i++}->${it}"
     }
     into("copied")
 }
 
-tasks.register("printCfg"){
+tasks.register("printCfg") {
     doFirst {
         var configurations = project.configurations
         configurations.asMap.forEach { k, v ->
@@ -367,12 +381,42 @@ tasks.register("printCfg"){
     }
 }
 
+// 自定义的 task 使用 分组 和 Description 便于 gradle tasks 命令归纳统一分组的task 在一起，desc 便于使用者知道该 Task 执行的任务
+tasks.register("taskDefExcelOp1"){
+    group="excel_def"
+    description = "Defined By excel_op project"
+    doLast {
+        println("taskDefExcelOp1 exe")
+    }
+}
+
+tasks.register("taskDefExcelOp2"){
+    group="excel_def"
+    description = "Defined By excel_op project"
+    doLast {
+        println("taskDefExcelOp2 exe")
+    }
+}
+
 //向所有Project 添加同名的task (包括 RootProject 添加同名的task)
 
 allprojects {
-    this.tasks.register("allProjTask"){
-        doFirst{
+    this.tasks.register("allProjTask") {
+        doFirst {
             println("Task in ${this.project.name}")
         }
     }
+}
+
+// 从服务断下载zip 用于更新 init.d 中的init.gradle.kts 脚本和 gradle.properties 配置文件
+// 需要自己编写下载任务与上传任务
+//tasks.register<DownloadGradle>("downDloadCfg"){
+//
+//}
+
+
+// gradle build task
+tasks.register<org.gradle.api.tasks.GradleBuild>("gradleBuild"){
+    dir = File("/home/hunter/IdeaProjects/jvmLang")
+    tasks = listOf("tasks")
 }

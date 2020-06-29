@@ -11,7 +11,8 @@
 plugins {
     // Apply the Java Gradle plugin development plugin to add support for developing Gradle plugins
     `java-gradle-plugin`
-
+//    kotlin-dsl 会应用上面的 java-gradle-plugin
+//    `kotlin-dsl`
     // Apply the Kotlin JVM plugin to add support for Kotlin.
     id("org.jetbrains.kotlin.jvm") version "1.3.41"
 }
@@ -69,3 +70,4 @@ val check by tasks.getting(Task::class) {
     // Run the functional tests as part of `check`
     dependsOn(functionalTest)
 }
+
