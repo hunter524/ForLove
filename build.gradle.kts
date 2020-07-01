@@ -83,6 +83,32 @@ dependencies {
 // 自定义 scm Configuration 为 Scm 添加对应类型的依赖
 // 可以使用 gradle dependenices --configuration <cfg_name> 查看制定 cfg 的依赖配置
     "scm" ("org.eclipse.jgit:org.eclipse.jgit:4.9.2.201712150930-r")
+//    过滤相同功能的依赖
+//    制造相同功能的两个库的依赖 通过 LoggingCapability 告诉 gradle 这两个依赖具有相同的功能 此时 gradle 即会报错提示
+//    该功能 gradle 4.7 引入
+    implementation("apache-log4j:log4j:1.2.15")
+    implementation("org.slf4j:log4j-over-slf4j:1.7.10")
+    components.all{
+        println("All Component: ${this.id.toString()}")
+        this.allVariants{
+            println("All Component VariantMetaData: ${this.attributes}")
+        }
+    }
+    components.all(buildSrc.LoggingCapability::class.java)
+}
+
+//    通过 Configuration#ResolutionStrategy#capabilitiesResolution 解决冲突
+//    解决了 log4j capability 的冲突 添加了 org.slf4j:log4j-over-slf4j:1.7.10 的依赖
+configurations.all {
+    this.resolutionStrategy.capabilitiesResolution.withCapability("log4j","log4j"){
+        var candidates = this.candidates
+        candidates.forEach {
+            println("log4j capabilitiey candidate: ${it.displayName} candidate class:${it::class.java.simpleName}")
+            if(it.displayName.contains("slf4j")){
+                select(it)
+            }
+        }
+    }
 }
 
 application {
