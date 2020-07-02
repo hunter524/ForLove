@@ -95,6 +95,11 @@ dependencies {
         }
     }
     components.all(buildSrc.LoggingCapability::class.java)
+// 添加动态版本依赖 用于测试 dependency locking
+//    动态版本大于 1.0.0 包含 小于 2.0.0 不包含 gradle 自动选择了最高版本 2.0 实际上google 的 gson 库最新版本为 2.8.6
+    implementation("com.google.code.gson:gson:[1.0.0,2.0.0)")
+//    implementation("com.google.code.gson:gson:2.8.6")
+
 }
 
 //    通过 Configuration#ResolutionStrategy#capabilitiesResolution 解决冲突
@@ -108,6 +113,21 @@ configurations.all {
                 select(it)
             }
         }
+    }
+}
+// lock 注释掉关闭/即lockfile 与 build.gradle 中的文件不一致也可以编译通过
+// 打开注释 lockfile 文件的版本号与 build.gradle 不一致即不能编译通过
+dependencyLocking {
+    lockAllConfigurations()
+}
+// 运行该任务解析所有 Configuration 添加 --write-locks 命令即会生成对所有 Configuration 的 xxx.lock 文件
+// 通过 lock 文件锁定 Configuration 的依赖版本
+tasks.register("lockAndResolveAll"){
+    doFirst{
+        require(gradle.startParameter.isWriteDependencyLocks)
+    }
+    doLast{
+        configurations.filter { it.isCanBeResolved }.forEach { it.resolve() }
     }
 }
 
