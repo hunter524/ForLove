@@ -94,12 +94,28 @@ dependencies {
             println("All Component VariantMetaData: ${this.attributes}")
         }
     }
-    components.all(buildSrc.LoggingCapability::class.java)
+    components.all(buildSrc.LoggingCapability::class.java){
+//        该 Action 是用来配置 LoggingCapability 的构造参数
+        params("excel_op")
+    }
 // 添加动态版本依赖 用于测试 dependency locking
 //    动态版本大于 1.0.0 包含 小于 2.0.0 不包含 gradle 自动选择了最高版本 2.0 实际上google 的 gson 库最新版本为 2.8.6
-    implementation("com.google.code.gson:gson:[1.0.0,2.0.0)")
+    implementation("com.google.code.gson:gson:2+")
 //    implementation("com.google.code.gson:gson:2.8.6")
 
+//    使用 modules 的替换规则 只有当 module 和 replacedBy 的依赖均存在时才会执行替换
+//    该处的替换主要是用于解决两个依赖的冲突，因此并不能替代 resolve 和 substitution 的功能
+//    添加 fastjson 依赖使其与 gson冲突
+    implementation("com.alibaba:fastjson:1.2.9")
+    modules{
+        module("com.google.code.gson:gson"){
+            println("Call Module Conflict Gson And fastJson use FastJson")
+            replacedBy("com.alibaba:fastjson")
+        }
+    }
+
+    "scm"("apache-log4j:log4j:1.2.15")
+    "scm"("org.slf4j:log4j-over-slf4j:1.7.10")
 }
 
 //    通过 Configuration#ResolutionStrategy#capabilitiesResolution 解决冲突
@@ -338,7 +354,7 @@ tasks.register("selfCheckUptoDate") {
 
 //批量的根据 Task 名称的规则执行任务，该任务在运行该task之前并不存在，是被根据规则动态创建的
 //如该处的域名则可以根据执行的任务名称动态的获取和更改
-tasks.addRule("Pattern:Ping<ID>") {
+tasks.addRule("Pattern: Ping<ID>") {
     val taskName = this;
     if (startsWith("ping")) {
         task(taskName) {
@@ -465,4 +481,91 @@ allprojects {
 tasks.register<org.gradle.api.tasks.GradleBuild>("gradleBuild"){
     dir = File("/home/hunter/IdeaProjects/jvmLang")
     tasks = listOf("tasks")
+}
+
+// configuration resolve 阶段替换指定库
+// 每一个依赖的库均会在解析阶段被解析
+configurations.all{
+//    resolve 阶段
+    resolutionStrategy.eachDependency {
+        println(" Resolve:${this.requested.toString()} Module:${this.requested.module}")
+    }
+//    substitution 阶段
+    resolutionStrategy.dependencySubstitution {
+        all {
+            println("Substitution:${this.requested.toString()}")
+        }
+    }
+//
+    resolutionStrategy.componentSelection {
+        all{
+            var candidate = this.candidate
+            println("Selection : $candidate")
+            if(candidate.version.equals("2.8.6")){
+                reject("just want to reject 2.8.6 version.usually this version is gson")
+            }
+        }
+    }
+}
+
+configurations{
+    getByName("implementation").withDependencies {
+        this.forEach {
+            println("Configuration#withDependencies: ${it.toString()}")
+        }
+    }
+}
+
+// 迭代 Configuration 中依赖的文件(task 执行中的依赖可以获得级联依赖，因为task 依赖的 Configuration 在 task 执行之前已经 resolve 解析过了
+// 文件路径指向了
+tasks.register("iteratorFileFromCfg"){
+    var scm = configurations.getByName("scm")
+    dependsOn(scm)
+    doLast {
+        var files = scm.files
+        files.forEach {
+            println("Iterator Cfg: ${it.absolutePath}")
+        }
+    }
+}
+
+tasks.register("getPublishCfg"){
+    var defaultCfg = configurations.getByName("runtime")
+    dependsOn(defaultCfg)
+    doLast {
+        configurations.forEach {
+            println("Iteratort All Cfg: ${it.name}")
+        }
+        var publications = defaultCfg.outgoing
+        publications.artifacts.forEach {
+           println("Iterator Publications: ${it.toString()}")
+        }
+    }
+}
+
+// compileKotlin 要求注册 outputs.file 注册的转换输出文件必须存在
+val artifactType = Attribute.of("artifactType", String::class.java)
+var nothing = org.gradle.api.attributes.Attribute.of("nothing", Boolean::class.javaObjectType)
+dependencies {
+    attributesSchema {
+        attribute(nothing)                      // (1)
+    }
+    artifactTypes.getByName("jar") {
+        attributes.attribute(nothing, false)    // (2)
+    }
+}
+
+configurations.all {
+    afterEvaluate {
+        if (isCanBeResolved) {
+            attributes.attribute(nothing, true) // (3)
+        }
+    }
+}
+
+dependencies {
+    registerTransform(buildSrc.DoNothingTransformer::class) {
+        from.attribute(nothing, false).attribute(artifactType, "jar")
+        to.attribute(nothing, true).attribute(artifactType, "jar")
+    }
 }
