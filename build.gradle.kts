@@ -544,28 +544,69 @@ tasks.register("getPublishCfg"){
 }
 
 // compileKotlin 要求注册 outputs.file 注册的转换输出文件必须存在
-val artifactType = Attribute.of("artifactType", String::class.java)
-var nothing = org.gradle.api.attributes.Attribute.of("nothing", Boolean::class.javaObjectType)
-dependencies {
-    attributesSchema {
-        attribute(nothing)                      // (1)
-    }
-    artifactTypes.getByName("jar") {
-        attributes.attribute(nothing, false)    // (2)
-    }
-}
+//val artifactType = Attribute.of("artifactType", String::class.java)
+//var nothing = org.gradle.api.attributes.Attribute.of("nothing", Boolean::class.javaObjectType)
+//dependencies {
+//    attributesSchema {
+//        attribute(nothing)                      // (1)
+//    }
+//    artifactTypes.getByName("jar") {
+//        attributes.attribute(nothing, false)    // (2)
+//    }
+//}
+//
+//configurations.all {
+//    afterEvaluate {
+//        if (isCanBeResolved) {
+//            attributes.attribute(nothing, true) // (3)
+//        }
+//    }
+//}
+//
+//dependencies {
+//    registerTransform(buildSrc.DoNothingTransformer::class) {
+//        from.attribute(nothing, false).attribute(artifactType, "jar")
+//        to.attribute(nothing, true).attribute(artifactType, "jar")
+//    }
+//}
 
-configurations.all {
-    afterEvaluate {
-        if (isCanBeResolved) {
-            attributes.attribute(nothing, true) // (3)
+// 自定义 Aritifact 不使用 Component
+
+var ktFile = file("settings.gradle.kts")
+
+// 只发布这一个文件和 maven 文件
+var ktArtifact = artifacts.add("archives", ktFile) {
+    type = "kt"
+}
+// 定义 maven publish 发布到指定的本地 maven 残酷
+publishing {
+    publications {
+        create<MavenPublication>("myLibrary") {
+            from(components["java"])
+//            自定义一个文件发布到 repo 中
+            artifact(mapOf("source" to file("dep.txt"),"classifier" to "classifier","extension" to "ext"))
+        }
+
+        create<MavenPublication>("maven") {
+            artifact(ktArtifact)
+        }
+    }
+
+    repositories {
+        maven {
+            name = "myRepo"
+            url = uri("file:${rootProject.projectDir.absolutePath}/repo")
         }
     }
 }
 
-dependencies {
-    registerTransform(buildSrc.DoNothingTransformer::class) {
-        from.attribute(nothing, false).attribute(artifactType, "jar")
-        to.attribute(nothing, true).attribute(artifactType, "jar")
-    }
+// 测试 publis<publicatin_name>PublicationTo<Repo——Name>Repository 的任务是在 Project Evaluated 阶段创建，因此无法在 build.gradle
+// 脚本中引用该 task 进行修改
+project.afterEvaluate {
+    var tasks = project.tasks.toList()
+    println("AfterEvaluated Tasks: ${(tasks.toTypedArray().toString())}")
+}
+
+tasks.withType(PublishToMavenRepository::class.java).configureEach {
+    println("config Each")
 }
