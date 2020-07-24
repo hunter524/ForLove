@@ -38,7 +38,7 @@ class BuildSrcPlugin: Plugin<Project> {
 // 生命周期的日志已经被解析
  class TaskExecutionLogger: TaskExecutionListener{
      override fun beforeExecute(task: Task) {
-         println("[${task.name}]")
+         println("[${task.name}] Task Type: ${task::class.java.simpleName}")
      }
 
      override fun afterExecute(task: Task, state: TaskState) {

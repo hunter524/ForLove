@@ -12,6 +12,10 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 import java.util.zip.CRC32
 
+/**
+ * 单纯的 kotlin 项目 @see 会跳转到具体的文件，android 项目中该功能无效
+ * @see System.out
+ */
 class App {
     val greeting: String
         get() {

@@ -44,6 +44,28 @@ apply(mapOf("from" to "applied.gradle.kts"))
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
+
+    sourceSets {
+        main {
+            java {
+//                只使用 java_src 目录作为 java 根目录 此时 main/java 目录的源码文件不会被编译
+//               setSrcDirs(listOf("java_src"))
+//                该方法是向 java src 中 添加 java_src 目录 原有的 main 目录依旧在 src 目录中
+                srcDir("java_src")
+            }
+        }
+//        创建一个独立的 SourceSet 用于配置单独的依赖
+        create("just")
+    }
+}
+
+// JavaPluginConvention 无法在 Project 中获取到
+// TODO://在 JavaPluginConvention 无法在生成的 jar 包中生效
+project.convention.getPlugin(JavaPluginConvention::class.java).apply {
+    println("Java Base Plugin Convention")
+    manifest {
+        attributes(mapOf("Attr" to "Add from JavaPluginConvention"))
+    }
 }
 
 repositories {
@@ -60,6 +82,8 @@ repositories {
 
 configurations{
     create("scm")
+//    create("justImplementation")
+
 }
 
 dependencies {
@@ -72,6 +96,8 @@ dependencies {
     implementation("com.alibaba:easyexcel:2.2.3")
 
     implementation("com.squareup.okio:okio:1.11.0")
+//    为 just 的 SourceSet 添加依赖
+    "justImplementation"("com.squareup.okio:okio:1.11.0")
     implementation("com.google.guava:guava:19.0")
 //    以名字推测 falt_repo 下面的依赖，优先级最低如果同 maven 等仓库重名会被覆盖
     implementation("org.hunter:javassistht:3.27.0-GA")
@@ -606,7 +632,62 @@ project.afterEvaluate {
     var tasks = project.tasks.toList()
     println("AfterEvaluated Tasks: ${(tasks.toTypedArray().toString())}")
 }
-
 tasks.withType(PublishToMavenRepository::class.java).configureEach {
     println("config Each")
+    "".apply {  }
+}
+
+//在 processResource 任务中添加额外的处理任务
+tasks.withType(ProcessResources::class.java).configureEach {
+//    在执行 processResources 的任务中过滤掉指定文件
+//    this.exclude("**/exclude*")
+//   将其他文件包含进入 也会导致 processResource 不会执行既定的任务
+    this.include("/home/hunter/IdeaProjects/ForLove/gradlew")
+//    不能向该 task 添加 Action 添加 Action 则会使该 Task 不再执行
+//    this.doLast {
+//        var copy = this as Copy
+//        var destinationDir = copy.destinationDir
+//        println("destinationDir is ${destinationDir.absolutePath}")
+//    }
+}
+
+// kotlin 提供的常用的扩展方法访问
+tasks.compileJava{
+
+}
+
+tasks.register("writeProperties",WriteProperties::class.java){
+    property("key","value")
+    outputFile = File("/home/hunter/IdeaProjects/ForLove/taskwrite.properties")
+}
+
+//压缩源码进入 jar包
+
+tasks.register("sourceJar",Jar::class.java){
+    archiveClassifier.set("source")
+    from(sourceSets.main.get().allJava)
+}
+// 让 assemble 依赖于 sourceJar 即可以使用 assemble 一次运行既编译生成运行包 jar 也可以生成 source.jar
+//tasks.getByName("assemble").dependsOn(tasks.getByName("sourceJar"))
+
+//
+val asciidoclet by configurations.creating
+
+dependencies {
+    asciidoclet("org.asciidoctor:asciidoclet:1.+")
+}
+
+tasks.register("configureJavadoc") {
+    doLast {
+        tasks.javadoc {
+            options.doclet = "org.asciidoctor.Asciidoclet"
+            options.docletpath = asciidoclet.files.toList()
+//            一定要使用大写的UTF-8 才可以解决乱码问题
+            options.encoding = "UTF-8"
+        }
+    }
+}
+
+tasks.javadoc {
+    dependsOn("configureJavadoc")
 }
