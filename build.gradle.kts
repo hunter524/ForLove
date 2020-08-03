@@ -22,7 +22,10 @@ plugins {
     maven
     idea
 //    buildSrc 项目中定义的插件定义 id,其他项目通过id 引用该插件
-    id("build_src")
+//    同一个插件可以定义两个不同的id 只需要使用 gradlePlugin { plugins {} } 声明两次不同的 id 即可
+//    id("build_src")
+    id("buildSrc.greeting")
+    id("com.github.hunter524.gradle.plugin.BarPlugin")
 }
 
 
@@ -40,6 +43,11 @@ apply {
 
 //apply (from = "applied.gradle.kts")
 apply(mapOf("from" to "applied.gradle.kts"))
+base {
+    libsDirName = "libselfDef"
+    distsDirName = "distributionSeflDef"
+    archivesBaseName = "ArchiveBaseName"
+}
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -51,12 +59,36 @@ java {
 //                只使用 java_src 目录作为 java 根目录 此时 main/java 目录的源码文件不会被编译
 //               setSrcDirs(listOf("java_src"))
 //                该方法是向 java src 中 添加 java_src 目录 原有的 main 目录依旧在 src 目录中
-                srcDir("java_src")
+//                srcDir("java_src")
             }
         }
 //        创建一个独立的 SourceSet 用于配置单独的依赖
         create("just")
     }
+}
+
+// JavaBasePlugin 直接在Project 内部添加了 sourceSets 扩展
+sourceSets {
+    main {
+        java {
+            srcDir("java_src")
+        }
+    }
+}
+
+tasks.register<Jar>("jarJust"){
+    this.from(sourceSets.getByName("just").output)
+}
+
+tasks.getByName("jar"){
+    (this as Jar).from(sourceSets.getByName("just").output)
+}
+
+application {
+    // Define the main class for the application
+    mainClassName = "com.github.hunter524.forlove.WritePropertiesKt"
+    version = "0.0.1"
+    group = "com.github.hunter524"
 }
 
 // JavaPluginConvention 无法在 Project 中获取到
@@ -114,16 +146,16 @@ dependencies {
 //    该功能 gradle 4.7 引入
     implementation("apache-log4j:log4j:1.2.15")
     implementation("org.slf4j:log4j-over-slf4j:1.7.10")
-    components.all{
-        println("All Component: ${this.id.toString()}")
-        this.allVariants{
-            println("All Component VariantMetaData: ${this.attributes}")
-        }
-    }
-    components.all(buildSrc.LoggingCapability::class.java){
-//        该 Action 是用来配置 LoggingCapability 的构造参数
-        params("excel_op")
-    }
+//    components.all{
+//        println("All Component: ${this.id.toString()}")
+//        this.allVariants{
+//            println("All Component VariantMetaData: ${this.attributes}")
+//        }
+//    }
+//    components.all(buildSrc.LoggingCapability::class.java){
+////        该 Action 是用来配置 LoggingCapability 的构造参数
+//        params("excel_op")
+//    }
 // 添加动态版本依赖 用于测试 dependency locking
 //    动态版本大于 1.0.0 包含 小于 2.0.0 不包含 gradle 自动选择了最高版本 2.0 实际上google 的 gson 库最新版本为 2.8.6
     implementation("com.google.code.gson:gson:2+")
@@ -173,12 +205,7 @@ tasks.register("lockAndResolveAll"){
     }
 }
 
-application {
-    // Define the main class for the application
-    mainClassName = "com.github.hunter524.forlove.AppKt"
-    version = "0.0.1"
-    group = "com.github.hunter524"
-}
+
 
 
 // fat-jar/uber-jar
@@ -511,36 +538,36 @@ tasks.register<org.gradle.api.tasks.GradleBuild>("gradleBuild"){
 
 // configuration resolve 阶段替换指定库
 // 每一个依赖的库均会在解析阶段被解析
-configurations.all{
-//    resolve 阶段
-    resolutionStrategy.eachDependency {
-        println(" Resolve:${this.requested.toString()} Module:${this.requested.module}")
-    }
-//    substitution 阶段
-    resolutionStrategy.dependencySubstitution {
-        all {
-            println("Substitution:${this.requested.toString()}")
-        }
-    }
-//
-    resolutionStrategy.componentSelection {
-        all{
-            var candidate = this.candidate
-            println("Selection : $candidate")
-            if(candidate.version.equals("2.8.6")){
-                reject("just want to reject 2.8.6 version.usually this version is gson")
-            }
-        }
-    }
-}
+//configurations.all{
+////    resolve 阶段
+//    resolutionStrategy.eachDependency {
+//        println(" Resolve:${this.requested.toString()} Module:${this.requested.module}")
+//    }
+////    substitution 阶段
+//    resolutionStrategy.dependencySubstitution {
+//        all {
+//            println("Substitution:${this.requested.toString()}")
+//        }
+//    }
+////
+//    resolutionStrategy.componentSelection {
+//        all{
+//            var candidate = this.candidate
+//            println("Selection : $candidate")
+//            if(candidate.version.equals("2.8.6")){
+//                reject("just want to reject 2.8.6 version.usually this version is gson")
+//            }
+//        }
+//    }
+//}
 
-configurations{
-    getByName("implementation").withDependencies {
-        this.forEach {
-            println("Configuration#withDependencies: ${it.toString()}")
-        }
-    }
-}
+//configurations{
+//    getByName("implementation").withDependencies {
+//        this.forEach {
+//            println("Configuration#withDependencies: ${it.toString()}")
+//        }
+//    }
+//}
 
 // 迭代 Configuration 中依赖的文件(task 执行中的依赖可以获得级联依赖，因为task 依赖的 Configuration 在 task 执行之前已经 resolve 解析过了
 // 文件路径指向了
@@ -690,4 +717,23 @@ tasks.register("configureJavadoc") {
 
 tasks.javadoc {
     dependsOn("configureJavadoc")
+}
+
+//添加predefined Task
+tasks.register<com.github.hunter524.gradle.task.LatestArtifactTask>("latestArtifact"){
+    url = "https://blog.guyuesh2.online"
+    artifact = "latest blog"
+}
+
+//可以使用该方式进行 extension 配置 但是在 build.gradle.kts 脚本中这种设置方式会爆红，但是可以正常使用
+// 自定义的 Extension 推荐使用该方式进行设置
+//barExt{
+//    home = "config home by user"
+//}
+
+// 自定义属性推荐使用这种方式进行设置
+configure<com.github.hunter524.gradle.plugin.BarExtension>(){
+    home = "user def home"
+    site = "user def site"
+    content = content.copy("user def title","user def boady")
 }

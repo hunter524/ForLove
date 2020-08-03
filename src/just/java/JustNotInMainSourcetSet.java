@@ -7,8 +7,18 @@ import java.nio.charset.Charset;
 // 单独定义的 SourceSet 无法使用在main 中引入的 implementation api 等依赖
 // 需要使用 justImplementation
 // 执行 compile<SourceSetName>Java process<SourceSetName>Resource 可以编译指定 SourceSet 的资源文件和源码
-// Todo:// 如何生成指定 SourceSet 的 jar?
-public class JustMain {
+
+// 使用自定义 jar 任务指定输入目录，即可打包该sourceSet 下的 java class 文件
+//tasks.register<Jar>("jarJust"){
+//        this.from(sourceSets.getByName("just").output)
+//        }
+
+// 查询到 java 插件默认的 jar 任务，将 just SourceSet#outPut 添加进入任务 则 jar 任务也会打包 just 目录下的 java class 文件
+//tasks.getByName("jar"){
+//        (this as Jar).from(sourceSets.getByName("just").output)
+//        }
+
+public class JustNotInMainSourcetSet {
     public static void main(String[] args) throws Throwable{
         BufferedSource buffer = Okio.buffer(Okio.source(new File("/home/hunter/IdeaProjects/ForLove/tmp.txt")));
         String content = buffer.readUtf8();

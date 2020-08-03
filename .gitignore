@@ -5,3 +5,5 @@
 build
 .idea/
 .change
+./out/
+

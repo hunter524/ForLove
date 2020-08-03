@@ -19,10 +19,20 @@ plugins {
 //上面 java-gradle-plugin 插件中的配置语法 用于将 buildSrc 中定义的Class 插件命名 id 便于后面使用
 gradlePlugin{
     plugins{
-        create("build_src"){
+        create("no_name"){
             id="build_src"
             implementationClass = "buildSrc.BuildSrcPlugin"
         }
+
+        create("bar_plugin"){
+            id = "com.github.hunter524.gradle.plugin.BarPlugin"
+            implementationClass = "com.github.hunter524.gradle.plugin.BarPlugin"
+        }
+    }
+    // Define the plugin
+    val greeting by plugins.creating {
+        id = "buildSrc.greeting"
+        implementationClass = "buildSrc.BuildSrcPlugin"
     }
 }
 repositories {
@@ -43,14 +53,6 @@ dependencies {
 
     // Use the Kotlin JUnit integration.
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
-}
-
-gradlePlugin {
-    // Define the plugin
-    val greeting by plugins.creating {
-        id = "buildSrc.greeting"
-        implementationClass = "buildSrc.BuildSrcPlugin"
-    }
 }
 
 // Add a source set for the functional test suite

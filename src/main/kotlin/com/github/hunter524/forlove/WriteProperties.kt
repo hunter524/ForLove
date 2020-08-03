@@ -15,4 +15,5 @@ fun main() {
     }
     var outputStream = file.outputStream()
     properties.store(outputStream,"comments")
+    println("Writed")
 }
