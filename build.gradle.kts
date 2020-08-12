@@ -407,6 +407,7 @@ tasks.register("selfCheckUptoDate") {
 
 //批量的根据 Task 名称的规则执行任务，该任务在运行该task之前并不存在，是被根据规则动态创建的
 //如该处的域名则可以根据执行的任务名称动态的获取和更改
+// 该处的 addRule 实际使用的也是 NamedDomainObjectCollection 的
 tasks.addRule("Pattern: Ping<ID>") {
     val taskName = this;
     if (startsWith("ping")) {
@@ -596,9 +597,6 @@ tasks.register("getPublishCfg"){
     }
 }
 
-// compileKotlin 要求注册 outputs.file 注册的转换输出文件必须存在
-//val artifactType = Attribute.of("artifactType", String::class.java)
-//var nothing = org.gradle.api.attributes.Attribute.of("nothing", Boolean::class.javaObjectType)
 //dependencies {
 //    attributesSchema {
 //        attribute(nothing)                      // (1)
@@ -737,3 +735,7 @@ configure<com.github.hunter524.gradle.plugin.BarExtension>(){
     site = "user def site"
     content = content.copy("user def title","user def boady")
 }
+
+tasks.register<com.github.hunter524.gradle.task.TaskProperty>("taskProperty","https://google.com",this.objects.property(String::class).apply {
+    set("https://blog.guyuesh.online")
+})
