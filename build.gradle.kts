@@ -739,3 +739,32 @@ configure<com.github.hunter524.gradle.plugin.BarExtension>(){
 tasks.register<com.github.hunter524.gradle.task.TaskProperty>("taskProperty","https://google.com",this.objects.property(String::class).apply {
     set("https://blog.guyuesh.online")
 })
+
+//tasks.register<com.github.hunter524.gradle.task.ReadOnlyTaskProperty>("readOnlyTaskProperty"){
+//    getNameProperty().set("name forlove")
+//}
+
+//测试ext中属性的获取规则 Task 有自己的ext属性存储空间，且优先级高于 Project
+// todo:// kotlin 脚本中无法实现自动委托？需要使用者指定使用哪一个层级的 ext
+this.ext.set("extName","extValue Project")
+tasks.register("extTask"){
+    this.extra.set("extName","extValue Task")
+    doLast {
+        println("this name ${this.extra.get("extName")}")
+    }
+}
+
+// 测试 Provider Property 在Task属性中的使用，并且使用 flatmap 方法实现 Property 的转换
+tasks.register<com.github.hunter524.gradle.task.ProviderPropertyTask>("pptask"){
+    this.nameProperty.set("Hunter")
+}
+val producer by tasks.registering(com.github.hunter524.gradle.task.relation.ProducerTask::class)
+val consumer by tasks.registering(com.github.hunter524.gradle.task.relation.ConsumerTask::class)
+
+producer.configure{
+    outPutFile.set(layout.buildDirectory.file("out.txt"))
+}
+
+consumer.configure {
+    inputFile.set(producer.flatMap { it.outPutFile })
+}
