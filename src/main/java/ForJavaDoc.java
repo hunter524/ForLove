@@ -12,5 +12,6 @@ public class ForJavaDoc {
      */
     public static final int sum(int a,int b){
         return a+b;
+
     }
 }

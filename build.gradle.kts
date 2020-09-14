@@ -92,9 +92,9 @@ application {
 }
 
 // JavaPluginConvention 无法在 Project 中获取到
-// TODO://在 JavaPluginConvention 无法在生成的 jar 包中生效
 project.convention.getPlugin(JavaPluginConvention::class.java).apply {
     println("Java Base Plugin Convention")
+//    JavaPluginConvention 中的 manifest 只是提供了一种创建 manifest 的方法，并不是将 manifest 合并到其他 jar 包中
     manifest {
         attributes(mapOf("Attr" to "Add from JavaPluginConvention"))
     }
@@ -174,6 +174,10 @@ dependencies {
 
     "scm"("apache-log4j:log4j:1.2.15")
     "scm"("org.slf4j:log4j-over-slf4j:1.7.10")
+
+//    添加 apt 项目
+    annotationProcessor(project(":apt_proj"))
+    implementation(project(":apt_proj"))
 }
 
 //    通过 Configuration#ResolutionStrategy#capabilitiesResolution 解决冲突
@@ -758,13 +762,20 @@ tasks.register("extTask"){
 tasks.register<com.github.hunter524.gradle.task.ProviderPropertyTask>("pptask"){
     this.nameProperty.set("Hunter")
 }
-val producer by tasks.registering(com.github.hunter524.gradle.task.relation.ProducerTask::class)
+val producer1 by tasks.registering(com.github.hunter524.gradle.task.relation.ProducerTask::class)
+val producer2 by tasks.registering(com.github.hunter524.gradle.task.relation.ProducerTask::class)
 val consumer by tasks.registering(com.github.hunter524.gradle.task.relation.ConsumerTask::class)
 
-producer.configure{
-    outPutFile.set(layout.buildDirectory.file("out.txt"))
+producer1.configure{
+    outPutFile.set(layout.buildDirectory.file("out1.txt"))
 }
 
+producer2.configure{
+    outPutFile.set(layout.buildDirectory.file("out2.txt"))
+}
+
+// 通过 Provider/Property 即可以建立 任务之间的关联关系，不一定需要是 RegularFileProperty 和 DirectoryProperty
 consumer.configure {
-    inputFile.set(producer.flatMap { it.outPutFile })
+    inputFiles.add(producer1.flatMap { it.outPutFile })
+    inputFiles.add(producer2.flatMap { it.outPutFile })
 }
