@@ -20,7 +20,7 @@ plugins {
     application
     `maven-publish`
     maven
-    idea
+//    idea
 //    buildSrc 项目中定义的插件定义 id,其他项目通过id 引用该插件
 //    同一个插件可以定义两个不同的id 只需要使用 gradlePlugin { plugins {} } 声明两次不同的 id 即可
 //    id("build_src")
@@ -71,7 +71,7 @@ java {
 sourceSets {
     main {
         java {
-            srcDir("java_src")
+//            srcDir("java_src")
         }
     }
 }
@@ -82,6 +82,11 @@ tasks.register<Jar>("jarJust"){
 
 tasks.getByName("jar"){
     (this as Jar).from(sourceSets.getByName("just").output)
+}
+
+tasks.getByName("clean"){
+    println(sourceSets.getByName("main").output.generatedSourcesDirs.joinToString { it.absolutePath })
+    (this as Delete).delete(sourceSets.getByName("main").output.generatedSourcesDirs)
 }
 
 application {

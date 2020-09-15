@@ -44,7 +44,7 @@ public class HelloProcessor extends AbstractProcessor {
             Writer writer = repository.openWriter();
             writer.write("public class " + repositoryName + " {");
             writer.write("  public void save(" + entityName + " entity) {");
-            writer.write("System.out.println(\"hello apt"+entityName+" apend !\");");
+            writer.write("System.out.println(\"hello apt"+entityName+" append append append!\");");
             writer.write("  }");
             writer.write("}");
             writer.close();

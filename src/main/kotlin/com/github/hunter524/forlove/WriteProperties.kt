@@ -1,7 +1,6 @@
 package com.github.hunter524.forlove
 
 import AptProccedClass
-import AptProccedClassRepository
 import com.google.common.io.Files
 import java.io.File
 import java.util.*
@@ -18,5 +17,4 @@ fun main() {
     var outputStream = file.outputStream()
     properties.store(outputStream,"comments")
     println("Writed")
-    AptProccedClassRepository().save(AptProccedClass())
 }
