@@ -1,3 +1,5 @@
+package com.github.hunter524.forlove;
+
 /**
  *
  * Class java doc

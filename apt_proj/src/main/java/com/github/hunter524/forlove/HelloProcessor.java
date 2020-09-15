@@ -1,3 +1,5 @@
+package com.github.hunter524.forlove;
+
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
@@ -12,7 +14,14 @@ import java.io.Writer;
 import java.util.Collections;
 import java.util.Set;
 
-@SupportedAnnotationTypes("Entity")
+
+@SupportedAnnotationTypes("com.github.hunter524.forlove.Entity")
+/**
+ * APT 工具通常是
+ * 结合 JavaPeot 库进行使用，用于生成源码文件
+ * 结合 javassit,asm 库进行字节码操作，生成 class 文件
+ *
+ */
 public class HelloProcessor extends AbstractProcessor {
 
     @Override
@@ -22,7 +31,7 @@ public class HelloProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        TypeElement entityAnnotation = processingEnv.getElementUtils().getTypeElement("Entity");
+        TypeElement entityAnnotation = processingEnv.getElementUtils().getTypeElement("com.github.hunter524.forlove.Entity");
         if (!annotations.equals(Collections.singleton(entityAnnotation))) {
             return false;
         }

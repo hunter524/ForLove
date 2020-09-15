@@ -1,5 +1,6 @@
 package com.github.hunter524.forlove.bean;
 
+import com.google.common.collect.ComparisonChain;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -8,6 +9,11 @@ public class HashCodeBean implements Comparable<HashCodeBean> {
     private String name;
     private int age;
     private String sex;
+
+    public HashCodeBean(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -26,6 +32,6 @@ public class HashCodeBean implements Comparable<HashCodeBean> {
 
     @Override
     public int compareTo(@NotNull HashCodeBean o) {
-        return 0;
+        return ComparisonChain.start().compare(this.age,o.age).result();
     }
 }
