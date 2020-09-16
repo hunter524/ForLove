@@ -15,6 +15,10 @@ public class HashCodeBean implements Comparable<HashCodeBean> {
         this.age = age;
     }
 
+    public String getName() {
+        return name;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -33,5 +37,14 @@ public class HashCodeBean implements Comparable<HashCodeBean> {
     @Override
     public int compareTo(@NotNull HashCodeBean o) {
         return ComparisonChain.start().compare(this.age,o.age).result();
+    }
+
+    @Override
+    public String toString() {
+        return "HashCodeBean{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                ", sex='" + sex + '\'' +
+                '}';
     }
 }

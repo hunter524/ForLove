@@ -135,7 +135,7 @@ dependencies {
     implementation("com.squareup.okio:okio:1.11.0")
 //    为 just 的 SourceSet 添加依赖
     "justImplementation"("com.squareup.okio:okio:1.11.0")
-    implementation("com.google.guava:guava:19.0")
+    implementation("com.google.guava:guava:29.0-jre")
 //    以名字推测 falt_repo 下面的依赖，优先级最低如果同 maven 等仓库重名会被覆盖
     implementation("org.hunter:javassistht:3.27.0-GA")
 
