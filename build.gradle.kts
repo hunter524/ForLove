@@ -183,6 +183,15 @@ dependencies {
 //    添加 apt 项目
     annotationProcessor(project(":apt_proj"))
     implementation(project(":apt_proj"))
+
+//    声明 platform 依赖 表示非强制性的，如果项目有自己的版本依赖则以项目自己的依赖版本号为准
+//    声明 enforcedPlatform 依赖，表示强制性的，以 platform 的依赖覆盖项目自己的依赖。
+
+//    just 和 main 不同的 SourceSet 要分别统一依赖 platform
+    api(enforcedPlatform(project(":excel_platform")))
+    "justApi"(enforcedPlatform(project(":excel_platform")))
+
+
 }
 
 //    通过 Configuration#ResolutionStrategy#capabilitiesResolution 解决冲突

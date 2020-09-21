@@ -46,14 +46,14 @@ public class HelloProcessor extends AbstractProcessor {
     }
 
     private void createRepository(TypeElement entity) {
-        Name entityName = entity.getQualifiedName();
+        Name entityName = entity.getSimpleName();
         String repositoryName = entityName + "Repository";
         try {
             JavaFileObject repository = processingEnv.getFiler().createSourceFile(repositoryName, entity);
             Writer writer = repository.openWriter();
             writer.write("public class " + repositoryName + " {");
-            writer.write("  public void save(" + entityName + " entity) {");
-            writer.write("System.out.println(\"hello apt"+entityName+" append append append!\");");
+            writer.write("  public void save("+") {");
+            writer.write("System.out.println(\"hello apt"+" append append append!\");");
             writer.write("  }");
             writer.write("}");
             writer.close();

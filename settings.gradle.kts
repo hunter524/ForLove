@@ -26,3 +26,4 @@ settings.gradle.allprojects{
 }
 
 include("apt_proj")
+include("excel_platform")
