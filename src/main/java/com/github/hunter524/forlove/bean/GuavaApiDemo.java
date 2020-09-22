@@ -2,6 +2,7 @@ package com.github.hunter524.forlove.bean;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultiset;
 import com.google.common.collect.Ordering;
@@ -62,6 +63,7 @@ public class GuavaApiDemo {
         } catch (Throwable throwable) {
 //            该处不能抛出异常（否则方法要声明 Throwable 受查异常)
 //            throw throwable;
+            Throwables.throwIfUnchecked(throwable);
         }
     }
 }
