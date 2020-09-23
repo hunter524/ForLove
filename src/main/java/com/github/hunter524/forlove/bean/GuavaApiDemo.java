@@ -5,11 +5,13 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultiset;
+import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.Ordering;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class GuavaApiDemo {
     public static void main(String[] args) {
@@ -53,7 +55,17 @@ public class GuavaApiDemo {
 //        immutable Collections
         ImmutableList<String> immutableList = ImmutableList.of("a", "b", "c");
 //        construct immutable list from builder
-        ImmutableList.builder();
+        ImmutableList<String> copyAgainImmutableList = ImmutableList.copyOf(immutableList);
+//        使用辨识符号的hashCode 辨识是否是同一个对象而不是，用户 override 的 hashCode
+//        两个 immutableList 是同一个 List
+        System.out.println("identityHashCode immutableList:"+ System.identityHashCode(immutableList)+"copyAgainImmutableList:"+ System.identityHashCode(copyAgainImmutableList));
+        System.out.println("overrideHashCode immutableList:"+ immutableList.hashCode()+"copyAgainImmutableList:"+ copyAgainImmutableList.hashCode());
+
+        ImmutableSortedSet<String> immutableSortedSet = ImmutableSortedSet.of("bb","aa","ac","af");
+        System.out.println("immutableSortedSet:"+Arrays.deepToString(immutableSortedSet.toArray()));
+
+//
+
     }
 
     public static final void throwMethod() {

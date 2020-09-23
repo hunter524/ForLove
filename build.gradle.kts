@@ -793,3 +793,34 @@ consumer.configure {
     inputFiles.add(producer1.flatMap { it.outPutFile })
     inputFiles.add(producer2.flatMap { it.outPutFile })
 }
+
+project.afterEvaluate {
+    println("Project After Evaluate!")
+    var configuration = project.configurations.getByName("implementation")
+    configuration.dependencies.forEach {
+        println("After Evaluate Dependency: ${it.toString()}")
+    }
+}
+
+// 配置名称为 archives 的 Configuration 并且将该配置的产品上传到指定目录
+var fatJar = tasks.named("fatJar")
+var gitFileArtifact = file(".gitignore")
+//添加产品/产出产品的任务
+artifacts{
+//    add("archives",fatJar)
+//    add("archives",gitFileArtifact)
+}
+
+//配置指定名称的上传任务的 repo
+tasks.named<Upload>("uploadArchives"){
+    repositories {
+//        flatDir {
+//            dirs("build/flatRepo")
+//        }
+//        配置 maven 仓库则按照maven 仓库的命名规则进行依赖的上传
+        maven{
+            url=uri("file:/home/hunter/IdeaProjects/ForLove/build/mavenRepo")
+        }
+    }
+    isUploadDescriptor = false
+}
