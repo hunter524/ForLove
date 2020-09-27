@@ -74,10 +74,21 @@ sourceSets {
 //            srcDir("java_src")
         }
     }
+    named("just"){
+        java{
+            srcDir("src/just_external")
+        }
+        resources{
+            srcDir("src/just/resources")
+        }
+    }
 }
-
+// src/just/java 与 src/just_external 目录下的 java 文件均包含进入了名称为 just 的 SourceSet 的 java 文件集合中
 tasks.register<Jar>("jarJust"){
     this.from(sourceSets.getByName("just").output)
+    manifest{
+        attributes("Main-Class" to "com.github.hunter524.just.external.JustExternal")
+    }
 }
 
 tasks.getByName("jar"){
@@ -681,11 +692,12 @@ tasks.withType(PublishToMavenRepository::class.java).configureEach {
 }
 
 //在 processResource 任务中添加额外的处理任务
+//使用 this.include("/home/hunter/IdeaProjects/ForLove/gradlew") 会导致默认的 processResouce 任务不执行
 tasks.withType(ProcessResources::class.java).configureEach {
 //    在执行 processResources 的任务中过滤掉指定文件
 //    this.exclude("**/exclude*")
 //   将其他文件包含进入 也会导致 processResource 不会执行既定的任务
-    this.include("/home/hunter/IdeaProjects/ForLove/gradlew")
+//    this.include("/home/hunter/IdeaProjects/ForLove/gradlew")
 //    不能向该 task 添加 Action 添加 Action 则会使该 Task 不再执行
 //    this.doLast {
 //        var copy = this as Copy

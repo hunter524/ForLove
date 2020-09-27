@@ -3,15 +3,9 @@ package com.github.hunter524.forlove.bean;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMultiset;
-import com.google.common.collect.ImmutableSortedSet;
-import com.google.common.collect.Ordering;
+import com.google.common.collect.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class GuavaApiDemo {
     public static void main(String[] args) {
@@ -63,8 +57,22 @@ public class GuavaApiDemo {
 
         ImmutableSortedSet<String> immutableSortedSet = ImmutableSortedSet.of("bb","aa","ac","af");
         System.out.println("immutableSortedSet:"+Arrays.deepToString(immutableSortedSet.toArray()));
+//        MultiSet
 
-//
+//        HashMultiset
+        Multiset<String> multiset = HashMultiset.create();
+//        TreeMultiset
+//        multiset = TreeMultiset.create();
+        multiset.setCount("e",4);
+        multiset.add("a");
+        multiset.add("c");
+        multiset.add("b");
+        multiset.add("a");
+        multiset.setCount("a",1);
+        Iterator<String> iterator = multiset.iterator();
+        while (iterator.hasNext()){
+            System.out.println("HashMultiSet Iterator:"+iterator.next());
+        }
 
     }
 
