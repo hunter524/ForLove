@@ -74,6 +74,9 @@ public class GuavaApiDemo {
             System.out.println("HashMultiSet Iterator:"+iterator.next());
         }
 
+//        MultiMap/MultiMapBuilder
+        MultimapBuilder.hashKeys()
+
     }
 
     public static final void throwMethod() {

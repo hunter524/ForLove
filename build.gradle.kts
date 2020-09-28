@@ -836,3 +836,16 @@ tasks.named<Upload>("uploadArchives"){
     }
     isUploadDescriptor = false
 }
+
+//打印 JavaCompile 任务默认配置的 options
+tasks.withType(JavaCompile::class.java).configureEach {
+    //    配置 编译参数 -g:none 使用 javap 查看生成的类 class 不携带 LineNumberTable 信息
+    options.compilerArgs = listOf("-g:none")
+//    是否输出对 Deprecation API 使用的详细信息:会具体输出某一行代码
+    options.isDeprecation = true
+//    输出当前编译过的文件
+    options.isListFiles = true
+
+    println("JavaCompileOptions: ${options.optionMap()}")
+
+}
