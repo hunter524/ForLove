@@ -1,4 +1,4 @@
-
+import java.io.ByteArrayOutputStream
 
 println("load buile.gradle.kts")
 /*
@@ -848,4 +848,18 @@ tasks.withType(JavaCompile::class.java).configureEach {
 
     println("JavaCompileOptions: ${options.optionMap()}")
 
+}
+
+// 使用 Project 的命令行执行封装,执行命令
+// 通过 ByteArrayOutputStream 获得执行命令的输出信息
+
+tasks.register<DefaultTask>("exeJavaVersion"){
+    doFirst {
+        var byteOutPut:ByteArrayOutputStream = ByteArrayOutputStream()
+        var result = project.exec {
+            standardOutput = byteOutPut
+            commandLine("java", "-version")
+        }
+        println(String(byteOutPut.toByteArray()))
+    }
 }

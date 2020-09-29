@@ -75,7 +75,22 @@ public class GuavaApiDemo {
         }
 
 //        MultiMap/MultiMapBuilder
-        MultimapBuilder.hashKeys()
+        SetMultimap<String, String> hashSetMultiMap = MultimapBuilder.hashKeys()
+                                                           .hashSetValues()
+                                                           .build();
+        hashSetMultiMap.put("a","a1");
+        hashSetMultiMap.put("a","a2");
+        hashSetMultiMap.put("a","a3");
+        hashSetMultiMap.put("a","a4");
+        hashSetMultiMap.put("a","a5");
+        hashSetMultiMap.put("b","b1");
+        hashSetMultiMap.put("b","b2");
+        hashSetMultiMap.put("c","c1");
+
+        System.out.println("hashSetMultiMap:"+hashSetMultiMap.toString());
+//        replace
+        hashSetMultiMap.replaceValues("a",Lists.newArrayList("aa1","aa2"));
+        System.out.println("hashSetMultiMap:"+hashSetMultiMap.toString());
 
     }
 
