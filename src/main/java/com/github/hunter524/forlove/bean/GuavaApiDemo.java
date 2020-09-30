@@ -44,6 +44,15 @@ public class GuavaApiDemo {
         elements.add(big2);
         List<HashCodeBean> sortedList = natural.sortedCopy(elements);
         System.out.println("sorted copy list:" + Arrays.deepToString(sortedList.toArray()));
+
+        Ordering<Integer> intOrdering = Ordering.from((o1, o2) -> {
+            if (o1 > o2) return 1;
+            if (o1 < o2) return -1;
+            return 0;
+        });
+        List<Integer> es = intOrdering.sortedCopy(Lists.newArrayList(Integer.valueOf(1), Integer.valueOf(2),Integer.valueOf( 6), Integer.valueOf(1), Integer.valueOf(9)));
+        System.out.println("sorted copy list:" + Arrays.deepToString(es.toArray()));
+
 //        Throwables
         throwMethod();
 //        immutable Collections
@@ -92,6 +101,21 @@ public class GuavaApiDemo {
         hashSetMultiMap.replaceValues("a",Lists.newArrayList("aa1","aa2"));
         System.out.println("hashSetMultiMap:"+hashSetMultiMap.toString());
 
+//        BiMap 双向映射
+        HashBiMap<String, String> kvMap = HashBiMap.create();
+        kvMap.put("k1","v1");
+        kvMap.put("k2","v2");
+        kvMap.put("k3","v3");
+        kvMap.put("k4","v4");
+        System.out.println("K-V:"+kvMap);
+
+        BiMap<String, String> vkMapView = kvMap.inverse();
+        System.out.println("V-K:"+vkMapView);
+
+        vkMapView.remove("v1");
+
+        System.out.println("K-V After remove view v1:"+kvMap);
+        System.out.println("V-K After remove view v1:"+vkMapView);
     }
 
     public static final void throwMethod() {

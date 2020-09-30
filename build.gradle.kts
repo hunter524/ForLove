@@ -845,6 +845,7 @@ tasks.withType(JavaCompile::class.java).configureEach {
     options.isDeprecation = true
 //    输出当前编译过的文件
     options.isListFiles = true
+//    debug 开关 打开会输出编译命令行参数
 
     println("JavaCompileOptions: ${options.optionMap()}")
 
