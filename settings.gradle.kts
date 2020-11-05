@@ -6,6 +6,31 @@
  * Detailed information about configuring a multi-project build in Gradle can be found
  * in the user manual at https://docs.gradle.org/5.6.4/userguide/multi_project_builds.html
  */
+gradle.addListener(object:BuildListener{
+    override fun buildStarted(gradle: Gradle) {
+        println("LifeCycle: buildStarted")
+    }
+
+    override fun settingsEvaluated(settings: Settings) {
+        var allProjects = (settings as org.gradle.api.internal.SettingsInternal).projectRegistry.allProjects
+        println("LifeCycle: settingsEvaluated Projects: ${allProjects.toTypedArray()}")
+    }
+
+    override fun projectsLoaded(gradle: Gradle) {
+        var allProjects = (gradle as org.gradle.api.internal.GradleInternal).rootProject.allprojects
+        println("LifeCycle: projectsLoaded Projects: ${allProjects.toTypedArray()}")
+    }
+
+    override fun projectsEvaluated(gradle: Gradle) {
+        var allProjects = (gradle as org.gradle.api.internal.GradleInternal).rootProject.allprojects
+        println("LifeCycle: projectsEvaluated Projects: ${allProjects.toTypedArray()}")
+    }
+
+    override fun buildFinished(result: BuildResult) {
+        println("LifeCycle: buildFinished")
+    }
+})
+
 println("load setting script")
 rootProject.name = "excel-op"
 // 自定义配置 --build-cache 的缓存位置
@@ -27,3 +52,4 @@ settings.gradle.allprojects{
 
 include("apt_proj")
 include("excel_platform")
+

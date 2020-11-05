@@ -1,4 +1,7 @@
 import java.io.ByteArrayOutputStream
+import buildSrc.SimpleTaskKt
+import buildSrc.SimpleTaskJava
+import buildSrc.SimpleClassGroovy
 
 println("load buile.gradle.kts")
 /*
@@ -38,6 +41,7 @@ plugins {
 apply {
 //    type(BuildSrcPlugin::class)
 //    from("applied.gradle.kts")
+    from("lifecycle_listener.kts")
 
 }
 
@@ -149,6 +153,9 @@ dependencies {
     implementation("com.google.guava:guava:29.0-jre")
 //    以名字推测 falt_repo 下面的依赖，优先级最低如果同 maven 等仓库重名会被覆盖
     implementation("org.hunter:javassistht:3.27.0-GA")
+//    直接引入tools.jar 文件
+    implementation("org.hunter:tools:*")
+
 
     // Use the Kotlin test library.
     testImplementation("org.jetbrains.kotlin:kotlin-test")
@@ -650,35 +657,7 @@ tasks.register("getPublishCfg"){
 //    }
 //}
 
-// 自定义 Aritifact 不使用 Component
 
-var ktFile = file("settings.gradle.kts")
-
-// 只发布这一个文件和 maven 文件
-var ktArtifact = artifacts.add("archives", ktFile) {
-    type = "kt"
-}
-// 定义 maven publish 发布到指定的本地 maven 残酷
-publishing {
-    publications {
-        create<MavenPublication>("myLibrary") {
-            from(components["java"])
-//            自定义一个文件发布到 repo 中
-            artifact(mapOf("source" to file("dep.txt"),"classifier" to "classifier","extension" to "ext"))
-        }
-
-        create<MavenPublication>("maven") {
-            artifact(ktArtifact)
-        }
-    }
-
-    repositories {
-        maven {
-            name = "myRepo"
-            url = uri("file:${rootProject.projectDir.absolutePath}/repo")
-        }
-    }
-}
 
 // 测试 publis<publicatin_name>PublicationTo<Repo——Name>Repository 的任务是在 Project Evaluated 阶段创建，因此无法在 build.gradle
 // 脚本中引用该 task 进行修改
@@ -814,25 +793,60 @@ project.afterEvaluate {
     }
 }
 
+// 自定义 Aritifact 不使用 Component
+
+var ktFile = file("settings.gradle.kts")
+
+// 只发布这一个文件和 maven 文件
+var ktArtifact = artifacts.add("archives", ktFile) {
+    type = "kt"
+}
+// 定义 maven publish 发布到指定的本地 maven 残酷
+publishing {
+    publications {
+        create<MavenPublication>("myLibrary") {
+            from(components["java"])
+//            自定义一个文件发布到 repo 中
+            artifact(mapOf("source" to file("dep.txt"),"classifier" to "classifier","extension" to "ext"))
+        }
+
+        create<MavenPublication>("maven") {
+            artifact(ktArtifact)
+        }
+    }
+
+    repositories {
+        maven {
+            name = "myRepo"
+            url = uri("file:${rootProject.projectDir.absolutePath}/repo")
+        }
+    }
+}
+
 // 配置名称为 archives 的 Configuration 并且将该配置的产品上传到指定目录
 var fatJar = tasks.named("fatJar")
 var gitFileArtifact = file(".gitignore")
 //添加产品/产出产品的任务
 artifacts{
 //    add("archives",fatJar)
-//    add("archives",gitFileArtifact)
+    add("archives",gitFileArtifact)
 }
 
 //配置指定名称的上传任务的 repo
+//向 TaskContainer 中添加了上传 Task 该 Task 的上传内容即为名称为 archives 的 Configuration 中的 Artifact
+//老的上传机制是通过 BasePlugin 添加的 UploadRule 创建的 uploadxxx 任务实现的上传操作
+//新的上传机制则通过 maven-publish 的 MavenPublishPlugin
+//同时 archives 类型的 Configuration 又是一种特殊的 配置,其在 BasePlugin 中配置容纳了所有其他的 Configuration 的 Artifact
 tasks.named<Upload>("uploadArchives"){
     repositories {
-//        flatDir {
-//            dirs("build/flatRepo")
-//        }
-//        配置 maven 仓库则按照maven 仓库的命名规则进行依赖的上传
-        maven{
-            url=uri("file:/home/hunter/IdeaProjects/ForLove/build/mavenRepo")
+//        flat 结构的本地 repo
+        flatDir {
+            dirs("build/flatRepo")
         }
+//        配置 maven 仓库则按照maven 仓库的命名规则进行依赖的上传
+//        maven{
+//            url=uri("file:/home/hunter/IdeaProjects/ForLove/build/mavenRepo")
+//        }
     }
     isUploadDescriptor = false
 }
@@ -846,7 +860,8 @@ tasks.withType(JavaCompile::class.java).configureEach {
 //    输出当前编译过的文件
     options.isListFiles = true
 //    debug 开关 打开会输出编译命令行参数
-
+    options.isFork = true
+    options.forkOptions.javaHome=File("/home/hunter/.sdkman/candidates/java/current")
     println("JavaCompileOptions: ${options.optionMap()}")
 
 }
@@ -864,3 +879,23 @@ tasks.register<DefaultTask>("exeJavaVersion"){
         println(String(byteOutPut.toByteArray()))
     }
 }
+// 创建 kotlin java groovy 三种语言的自定义 Task
+tasks.register("simpleTaskKt",SimpleTaskKt::class.java)
+tasks.register("simpleTaskJava",SimpleTaskJava::class.java)
+tasks.register("simpleTaskGroovy", buildSrc.SimpleClassGroovy::class.java)
+// 建立tasks 的依赖关系 Kt -> Java -> Groovy
+// 运行 simpleTaskKt 任务时 Task 的运行顺序为 Groovy -> Java -> Kt 与依赖关系刚刚好相反
+tasks.getByName("simpleTaskKt").dependsOn(tasks.named("simpleTaskJava"))
+tasks.getByName("simpleTaskJava").dependsOn(tasks.named("simpleTaskGroovy"))
+
+// 向现有的 compileJava Task 添加自定义的 Action 使其在执行 compileJava 时顺带执行自定义的任务
+// 只在主项目的 compileJava 任务中才会添加该 Action
+tasks.named("compileJava"){
+    doFirst {
+        println("Add doFirstAction To compileJava")
+        println("compileJava Project#ext projectext=${project.extra["projectext"]}")
+    }
+}
+
+project.ext["projectext"] = "project_val"
+
