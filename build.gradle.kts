@@ -209,6 +209,11 @@ dependencies {
     api(enforcedPlatform(project(":excel_platform")))
     "justApi"(enforcedPlatform(project(":excel_platform")))
 
+//    kotlin 执行脚本依赖的库
+    implementation(kotlin("script-runtime", "1.3.41"))
+    implementation(kotlin("script-util", "1.3.41"))
+    implementation(kotlin("compiler-embeddable", "1.3.41"))
+    implementation(kotlin("scripting-compiler-embeddable", "1.3.41"))
 
 }
 
