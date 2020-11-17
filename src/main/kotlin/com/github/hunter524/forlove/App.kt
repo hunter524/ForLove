@@ -7,6 +7,8 @@ import com.google.common.primitives.Ints
 import javassist.ClassPool
 import jdk.internal.org.objectweb.asm.ClassWriter
 import okio.ByteString
+import okio.ByteString.Companion.readByteString
+import okio.Okio
 import java.io.File
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -30,6 +32,9 @@ fun main(args: Array<String>) {
     testAppendReplace()
 
     println("${encrypt("451795172")}")
+//    代码运行时加载 jar 包中 resources 目录下的文件
+    var resourceAsStream = App::javaClass.javaClass.classLoader.getResourceAsStream("properties/exclude.properties")
+    println("resourceAsStream ${resourceAsStream.readByteString(resourceAsStream.available()).utf8()}")
 }
 
 private fun encrypt(str: String): String {

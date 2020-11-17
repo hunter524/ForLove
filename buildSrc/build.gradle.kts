@@ -39,6 +39,11 @@ repositories {
     // Use jcenter for resolving dependencies.
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
+    mavenCentral()
+//    gradle tooling api 在这个仓库
+    maven{
+        setUrl("https://maven.aliyun.com/repository/grails-core")
+    }
 }
 
 dependencies {
@@ -53,6 +58,7 @@ dependencies {
 
     // Use the Kotlin JUnit integration.
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
+    implementation ("org.gradle:gradle-tooling-api:5.6.4")
 }
 
 // Add a source set for the functional test suite

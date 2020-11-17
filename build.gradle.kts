@@ -106,7 +106,7 @@ tasks.getByName("clean"){
 
 application {
     // Define the main class for the application
-    mainClassName = "com.github.hunter524.forlove.WritePropertiesKt"
+    mainClassName = "com.github.hunter524.forlove.AppKt"
     version = "0.0.1"
     group = "com.github.hunter524"
 }
@@ -903,4 +903,23 @@ tasks.named("compileJava"){
 }
 
 project.ext["projectext"] = "project_val"
+
+
+tasks.register("printPro",DefaultTask::class.java){
+    doFirst{
+        println("========System Properties========")
+        System.getProperties().entries.forEach {
+            println("K -> ${it.key} : V - > ${it.value}")
+        }
+        println("========Project Properties========")
+        rootProject.extensions.extraProperties.properties.forEach {
+            println("K -> ${it.key} : V - > ${it.value}")
+        }
+
+        println("========System Envoriments========")
+        System.getenv().forEach {
+            println("K -> ${it.key} : V - > ${it.value}")
+        }
+    }
+}
 
