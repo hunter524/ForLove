@@ -1,0 +1,238 @@
+init script from gradle home init.d
+gradle object:1252581660
+init script from gradle home init.d
+gradle object:1983045940
+> Task :buildSrc:compileKotlin UP-TO-DATE
+> Task :buildSrc:compileJava UP-TO-DATE
+> Task :buildSrc:compileGroovy UP-TO-DATE
+> Task :buildSrc:pluginDescriptors UP-TO-DATE
+> Task :buildSrc:processResources UP-TO-DATE
+> Task :buildSrc:classes UP-TO-DATE
+> Task :buildSrc:inspectClassesForKotlinIC UP-TO-DATE
+> Task :buildSrc:jar UP-TO-DATE
+> Task :buildSrc:assemble UP-TO-DATE
+> Task :buildSrc:compileFunctionalTestKotlin UP-TO-DATE
+> Task :buildSrc:compileFunctionalTestJava NO-SOURCE
+> Task :buildSrc:compileFunctionalTestGroovy NO-SOURCE
+> Task :buildSrc:processFunctionalTestResources NO-SOURCE
+> Task :buildSrc:functionalTestClasses UP-TO-DATE
+> Task :buildSrc:pluginUnderTestMetadata UP-TO-DATE
+> Task :buildSrc:functionalTest UP-TO-DATE
+> Task :buildSrc:compileTestKotlin UP-TO-DATE
+> Task :buildSrc:compileTestJava NO-SOURCE
+> Task :buildSrc:compileTestGroovy NO-SOURCE
+> Task :buildSrc:processTestResources NO-SOURCE
+> Task :buildSrc:testClasses UP-TO-DATE
+> Task :buildSrc:test UP-TO-DATE
+> Task :buildSrc:validateTaskProperties UP-TO-DATE
+> Task :buildSrc:check UP-TO-DATE
+> Task :buildSrc:build UP-TO-DATE
+load setting script
+LifeCycle: settingsEvaluated Projects: [Lorg.gradle.initialization.DefaultProjectDescriptor;@2d659d5f
+LifeCycle: projectsLoaded Projects: [Lorg.gradle.api.Project;@642d2b31
+iterator all Project Name:excel-op
+iterator all Project Name:apt_proj
+iterator all Project Name:excel_platform
+iterator all Project Name:other_sub
+iterator all Project Name:sub_prj
+iterator all Project Name:sub_sub_prj
+
+> Configure project :
+load buile.gradle.kts
+applied gradle kts2
+/home/hunter/IdeaProjects/ForLove/build/generated/sources/annotationProcessor/java/main
+Java Base Plugin Convention
+Call Module Conflict Gson And fastJson use FastJson
+This From Script type is class Build_gradle super Class is class org.gradle.kotlin.dsl.KotlinBuildScript
+JavaCompileOptions: {fork=true, debug=true, headerOutputDirectory=property(interface org.gradle.api.file.Directory, undefined), annotationProcessorGeneratedSourcesDirectory=/home/hunter/IdeaProjects/ForLove/build/generated/sources/annotationProcessor/java/main, deprecation=true, failOnError=true, listFiles=true, annotationProcessorPath=configuration ':annotationProcessor', verbose=false, nowarn=false, javaHome=/home/hunter/.sdkman/candidates/java/current}
+JavaCompileOptions: {fork=true, debug=true, headerOutputDirectory=property(interface org.gradle.api.file.Directory, undefined), annotationProcessorGeneratedSourcesDirectory=/home/hunter/IdeaProjects/ForLove/build/generated/sources/annotationProcessor/java/test, deprecation=true, failOnError=true, listFiles=true, annotationProcessorPath=configuration ':testAnnotationProcessor', verbose=false, nowarn=false, javaHome=/home/hunter/.sdkman/candidates/java/current}
+JavaCompileOptions: {fork=true, debug=true, headerOutputDirectory=property(interface org.gradle.api.file.Directory, undefined), annotationProcessorGeneratedSourcesDirectory=/home/hunter/IdeaProjects/ForLove/build/generated/sources/annotationProcessor/java/just, deprecation=true, failOnError=true, listFiles=true, annotationProcessorPath=configuration ':justAnnotationProcessor', verbose=false, nowarn=false, javaHome=/home/hunter/.sdkman/candidates/java/current}
+config Each
+config Each
+AfterEvaluated Tasks: [Lorg.gradle.api.Task;@78a65026
+Project After Evaluate!
+After Evaluate Dependency: DefaultExternalModuleDependency{group='org.jetbrains.kotlin', name='kotlin-bom', version='1.3.41', configuration='default'}
+After Evaluate Dependency: DefaultExternalModuleDependency{group='org.jetbrains.kotlin', name='kotlin-stdlib-jdk8', version='1.3.41', configuration='default'}
+After Evaluate Dependency: DefaultExternalModuleDependency{group='com.alibaba', name='easyexcel', version='2.2.3', configuration='default'}
+After Evaluate Dependency: DefaultExternalModuleDependency{group='com.squareup.okio', name='okio', version='1.11.0', configuration='default'}
+After Evaluate Dependency: DefaultExternalModuleDependency{group='com.google.guava', name='guava', version='29.0-jre', configuration='default'}
+After Evaluate Dependency: DefaultExternalModuleDependency{group='org.hunter', name='javassistht', version='3.27.0-GA', configuration='default'}
+After Evaluate Dependency: DefaultExternalModuleDependency{group='org.hunter', name='tools', version='*', configuration='default'}
+After Evaluate Dependency: DefaultExternalModuleDependency{group='apache-log4j', name='log4j', version='1.2.15', configuration='default'}
+After Evaluate Dependency: DefaultExternalModuleDependency{group='org.slf4j', name='log4j-over-slf4j', version='1.7.10', configuration='default'}
+After Evaluate Dependency: DefaultExternalModuleDependency{group='com.google.code.gson', name='gson', version='2+', configuration='default'}
+After Evaluate Dependency: DefaultExternalModuleDependency{group='com.alibaba', name='fastjson', version='1.2.9', configuration='default'}
+After Evaluate Dependency: DefaultProjectDependency{dependencyProject='project ':apt_proj'', configuration='default'}
+After Evaluate Dependency: DefaultExternalModuleDependency{group='org.jetbrains.kotlin', name='kotlin-script-runtime', version='1.3.41', configuration='default'}
+After Evaluate Dependency: DefaultExternalModuleDependency{group='org.jetbrains.kotlin', name='kotlin-script-util', version='1.3.41', configuration='default'}
+After Evaluate Dependency: DefaultExternalModuleDependency{group='org.jetbrains.kotlin', name='kotlin-compiler-embeddable', version='1.3.41', configuration='default'}
+After Evaluate Dependency: DefaultExternalModuleDependency{group='org.jetbrains.kotlin', name='kotlin-scripting-compiler-embeddable', version='1.3.41', configuration='default'}
+LifeCycle: projectsEvaluated Projects: [Lorg.gradle.api.Project;@208e64c
+
+> Task :printPro
+[printPro] Task Type: DefaultTask_Decorated
+========System Properties========
+K -> java.runtime.name : V - > OpenJDK Runtime Environment
+K -> sun.boot.library.path : V - > /home/hunter/.sdkman/candidates/java/8.0.252-open/jre/lib/amd64
+K -> java.vm.version : V - > 25.252-b09
+K -> kotlin.environment.keepalive : V - > true
+K -> java.vm.vendor : V - > Oracle Corporation
+K -> java.vendor.url : V - > http://java.oracle.com/
+K -> path.separator : V - > :
+K -> java.vm.name : V - > OpenJDK 64-Bit Server VM
+K -> file.encoding.pkg : V - > sun.io
+K -> user.country : V - > CN
+K -> sun.java.launcher : V - > SUN_STANDARD
+K -> sun.os.patch.level : V - > unknown
+K -> java.vm.specification.name : V - > Java Virtual Machine Specification
+K -> user.dir : V - > /home/hunter/IdeaProjects/ForLove
+K -> java.runtime.version : V - > 1.8.0_252-b09
+K -> java.awt.graphicsenv : V - > sun.awt.X11GraphicsEnvironment
+K -> java.endorsed.dirs : V - > /home/hunter/.sdkman/candidates/java/8.0.252-open/jre/lib/endorsed
+K -> os.arch : V - > amd64
+K -> java.io.tmpdir : V - > /tmp
+K -> line.separator : V - > 
+
+K -> org.gradle.appname : V - > gradle
+K -> java.vm.specification.vendor : V - > Oracle Corporation
+K -> https.proxyHost : V - > 127.0.0.1
+K -> user.variant : V - > 
+K -> os.name : V - > Linux
+K -> ForLoveTime : V - > 2013-01-23
+K -> sun.jnu.encoding : V - > UTF-8
+K -> http.proxyPort : V - > 1081
+K -> java.library.path : V - > /usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib
+K -> java.specification.name : V - > Java Platform API Specification
+K -> java.class.version : V - > 52.0
+K -> sun.management.compiler : V - > HotSpot 64-Bit Tiered Compilers
+K -> os.version : V - > 5.4.0-52-generic
+K -> library.jansi.path : V - > /home/hunter/.gradle/native/jansi/1.17.1/linux64
+K -> user.home : V - > /home/hunter
+K -> user.timezone : V - > 
+K -> java.awt.printerjob : V - > sun.print.PSPrinterJob
+K -> file.encoding : V - > UTF-8
+K -> java.specification.version : V - > 1.8
+K -> java.class.path : V - > /home/hunter/.sdkman/candidates/gradle/5.6.4/lib/gradle-launcher-5.6.4.jar
+K -> user.name : V - > hunter
+K -> java.vm.specification.version : V - > 1.8
+K -> sun.java.command : V - > org.gradle.launcher.daemon.bootstrap.GradleDaemon 5.6.4
+K -> java.home : V - > /home/hunter/.sdkman/candidates/java/8.0.252-open/jre
+K -> sun.arch.data.model : V - > 64
+K -> user.language : V - > zh
+K -> java.specification.vendor : V - > Oracle Corporation
+K -> awt.toolkit : V - > sun.awt.X11.XToolkit
+K -> java.vm.info : V - > mixed mode
+K -> java.version : V - > 1.8.0_252
+K -> java.ext.dirs : V - > /home/hunter/.sdkman/candidates/java/8.0.252-open/jre/lib/ext:/usr/java/packages/lib/ext
+K -> http.proxyHost : V - > 127.0.0.1
+K -> sun.boot.class.path : V - > /home/hunter/.sdkman/candidates/java/8.0.252-open/jre/lib/resources.jar:/home/hunter/.sdkman/candidates/java/8.0.252-open/jre/lib/rt.jar:/home/hunter/.sdkman/candidates/java/8.0.252-open/jre/lib/sunrsasign.jar:/home/hunter/.sdkman/candidates/java/8.0.252-open/jre/lib/jsse.jar:/home/hunter/.sdkman/candidates/java/8.0.252-open/jre/lib/jce.jar:/home/hunter/.sdkman/candidates/java/8.0.252-open/jre/lib/charsets.jar:/home/hunter/.sdkman/candidates/java/8.0.252-open/jre/lib/jfr.jar:/home/hunter/.sdkman/candidates/java/8.0.252-open/jre/classes
+K -> java.vendor : V - > Oracle Corporation
+K -> file.separator : V - > /
+K -> java.vendor.url.bug : V - > http://bugreport.sun.com/bugreport/
+K -> sun.io.unicode.encoding : V - > UnicodeLittle
+K -> sun.cpu.endian : V - > little
+K -> https.proxyPort : V - > 1081
+K -> sun.desktop : V - > gnome
+K -> sun.cpu.isalist : V - > 
+========Project Properties========
+K -> ORG_GRADLE_PROJECT_foo : V - > foo
+K -> -Ddprop : V - > dvalue
+K -> systemProp.http.proxyPort : V - > 1081
+K -> gradleKotlinDsl.projectAccessorsClassPath : V - > AccessorsClassPath(bin=[/home/hunter/.gradle/caches/5.6.4/gradle-kotlin-dsl-accessors/btafor2cu8522lp0lix06795n/cache/classes], src=[/home/hunter/.gradle/caches/5.6.4/gradle-kotlin-dsl-accessors/btafor2cu8522lp0lix06795n/cache/src])
+K -> kotlin.plugin.loaded.in.projects.1.3.41 : V - > :
+K -> -Ppprop : V - > pvalue
+K -> archivesDirPath : V - > /home/hunter/IdeaProjects/ForLove/build/archives
+K -> ENV_PROP : V - > ENV_VAL
+K -> extName : V - > extValue Project
+K -> gradle.def.property : V - > gradle_def
+K -> systemProp.http.proxyHost : V - > 127.0.0.1
+K -> systemProp.https.proxyHost : V - > 127.0.0.1
+K -> systemProp.https.proxyPort : V - > 1081
+K -> systemProp.ForLoveTime : V - > 2013-01-23
+K -> org.gradle.project.bar : V - > bar
+K -> DiscoverScriptExtensionsTransform : V - > true
+K -> projectext : V - > project_val
+========System Envoriments========
+K -> PATH : V - > /home/hunter/.sdkman/candidates/groovy/current/bin:/home/hunter/.local/bin:/home/hunter/AndroidSoft/apache-maven-3.6.3/bin:/home/hunter/AndroidSoft/apache-ant-1.9.14/bin:/home/hunter/flutter/flutter_linux_v1.0.0-stable/flutter/bin:/home/hunter/.sdkman/candidates/java/current/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/hunter/AndroidSoft/AndroidSdk/tools:/home/hunter/.local/bin:/home/hunter/AndroidSoft/AndroidSdk/platform-tools:/home/hunter/AndroidSoft/AndroidSdk/tools/bin:/home/hunter/kotlin-compiler-1.3.61/kotlinc/bin:/home/hunter/.sdkman/candidates/gradle/current/bin
+K -> INVOCATION_ID : V - > 0455614869e6479ebb75db7055657b93
+K -> XAUTHORITY : V - > /run/user/1000/gdm/Xauthority
+K -> SDKMAN_VERSION : V - > 5.9.1+575
+K -> XMODIFIERS : V - > @im=fcitx
+K -> MANDATORY_PATH : V - > /usr/share/gconf/ubuntu.mandatory.path
+K -> GDMSESSION : V - > ubuntu
+K -> XDG_DATA_DIRS : V - > /usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
+K -> ZDOTDIR : V - > 
+K -> GTK_IM_MODULE : V - > fcitx
+K -> DBUS_SESSION_BUS_ADDRESS : V - > unix:path=/run/user/1000/bus
+K -> PUB_HOSTED_URL : V - > https://pub.flutter-io.cn
+K -> DEFAULTS_PATH : V - > /usr/share/gconf/ubuntu.default.path
+K -> __INTELLIJ_COMMAND_HISTFILE__ : V - > /home/hunter/.config/JetBrains/IntelliJIdea2020.2/terminal/history/history-194
+K -> ANDROID_HOME : V - > /home/hunter/AndroidSoft/AndroidSdk/
+K -> MVN_HOME : V - > /home/hunter/AndroidSoft/apache-maven-3.6.3
+K -> APPIMAGE : V - > /home/hunter/.local/share/JetBrains/Toolbox/bin/jetbrains-toolbox
+K -> XDG_CURRENT_DESKTOP : V - > ubuntu:GNOME
+K -> JOURNAL_STREAM : V - > 9:41901
+K -> SSH_AGENT_PID : V - > 1919
+K -> DESKTOP_AUTOSTART_ID : V - > 106479bbee25e0814160557586674820300000019730024
+K -> QT4_IM_MODULE : V - > fcitx
+K -> PAHT : V - > /usr/lib/dart/bin:/home/hunter/flutter/flutter_linux_v1.0.0-stable/flutter/bin:/home/hunter/.sdkman/candidates/java/current/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/hunter/AndroidSoft/AndroidSdk/tools:/home/hunter/.local/bin:/home/hunter/AndroidSoft/AndroidSdk/platform-tools:/home/hunter/AndroidSoft/AndroidSdk/tools/bin:/home/hunter/kotlin-compiler-1.3.61/kotlinc/bin:/home/hunter/.sdkman/candidates/gradle/current/bin
+K -> USERNAME : V - > hunter
+K -> SESSION_MANAGER : V - > local/hunter-H81M-D2:@/tmp/.ICE-unix/1973,unix/hunter-H81M-D2:/tmp/.ICE-unix/1973
+K -> SDKMAN_DIR : V - > /home/hunter/.sdkman
+K -> LOGNAME : V - > hunter
+K -> MANAGERPID : V - > 1726
+K -> PWD : V - > /home/hunter/IdeaProjects/ForLove
+K -> IM_CONFIG_PHASE : V - > 1
+K -> TOOLBOX_VERSION : V - > 1.18.7609
+K -> LANGUAGE : V - > zh_CN:zh
+K -> SHELL : V - > /usr/bin/zsh
+K -> PAGER : V - > less
+K -> GIO_LAUNCHED_DESKTOP_FILE : V - > /home/hunter/.config/autostart/jetbrains-toolbox.desktop
+K -> SDKMAN_CANDIDATES_API : V - > https://api.sdkman.io/2
+K -> OLDPWD : V - > /home/hunter/.sdkman/candidates/gradle/current
+K -> ZSH : V - > /home/hunter/.oh-my-zsh
+K -> GNOME_DESKTOP_SESSION_ID : V - > this-is-deprecated
+K -> GTK_MODULES : V - > gail:atk-bridge
+K -> CLUTTER_IM_MODULE : V - > fcitx
+K -> LESS : V - > -R
+K -> FLUTTER_STORAGE_BASE_URL : V - > https://storage.flutter-io.cn
+K -> APPDIR : V - > /tmp/.mount_jetbraD4s2Yt
+K -> XDG_SESSION_DESKTOP : V - > ubuntu
+K -> LS_COLORS : V - > rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:
+K -> SHLVL : V - > 1
+K -> QT_IM_MODULE : V - > fcitx
+K -> JAVA_HOME : V - > /home/hunter/.sdkman/candidates/java/current
+K -> TERM : V - > xterm-256color
+K -> FLUTTER_HOME : V - > /home/hunter/flutter/flutter_linux_v1.0.0-stable/flutter
+K -> XDG_CONFIG_DIRS : V - > /etc/xdg/xdg-ubuntu:/etc/xdg
+K -> LANG : V - > zh_CN.UTF-8
+K -> XDG_SESSION_TYPE : V - > x11
+K -> GRADLE_HOME : V - > /home/hunter/.sdkman/candidates/gradle/current
+K -> ANT_HOME : V - > /home/hunter/AndroidSoft/apache-ant-1.9.14
+K -> DISPLAY : V - > :0
+K -> GROOVY_HOME : V - > /home/hunter/.sdkman/candidates/groovy/current
+K -> DART_HOME : V - > /usr/lib/dart
+K -> OWD : V - > /home/hunter
+K -> _ : V - > /home/hunter/.sdkman/candidates/gradle/current/bin/gradle
+K -> XDG_SESSION_CLASS : V - > user
+K -> SDKMAN_CANDIDATES_DIR : V - > /home/hunter/.sdkman/candidates
+K -> LSCOLORS : V - > Gxfxcxdxbxegedabagacad
+K -> DESKTOP_SESSION : V - > ubuntu
+K -> GPG_AGENT_INFO : V - > /run/user/1000/gnupg/S.gpg-agent:0:1
+K -> SDKMAN_PLATFORM : V - > Linux64
+K -> USER : V - > hunter
+K -> XDG_MENU_PREFIX : V - > gnome-
+K -> CLASSPATH : V - > /home/hunter/.sdkman/candidates/gradle/5.6.4/lib/gradle-launcher-5.6.4.jar
+K -> GIO_LAUNCHED_DESKTOP_FILE_PID : V - > 3376
+K -> TERMINAL_EMULATOR : V - > JetBrains-JediTerm
+K -> WINDOWPATH : V - > 2
+K -> QT_ACCESSIBILITY : V - > 1
+K -> SSH_AUTH_SOCK : V - > /run/user/1000/keyring/ssh
+K -> GNOME_SHELL_SESSION_MODE : V - > ubuntu
+K -> XDG_RUNTIME_DIR : V - > /run/user/1000
+K -> HOME : V - > /home/hunter
+after Exe: org.gradle.api.internal.tasks.TaskStateInternal@267a772a
+LifeCycle: buildFinished
+
+BUILD SUCCESSFUL in 1s
+1 actionable task: 1 executed

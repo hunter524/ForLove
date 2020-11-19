@@ -516,13 +516,18 @@ tasks.register("fcft") {
 
 tasks.register<Copy>("cpfilter") {
     project.delete("copied/Copy_template.txt")
-    from("copy_temp")
+    from("copy_temp"){
+        exclude("**/*.js")
+        includeEmptyDirs = true
+    }
 //    groovy 模板模式 语法参见 SimpleTemplateEngine
-//    expand("year" to "2009","month" to "06","day" to true)
+    expand("year" to "2009","month" to "06","day" to true)
+    expand("accepted" to true)
 //    ant 模式  @var@
-//    filter(org.apache.tools.ant.filters.ReplaceTokens::class, "tokens" to mapOf("year" to "2009","month" to "06","day" to "day"))
+    filter(org.apache.tools.ant.filters.ReplaceTokens::class, "tokens" to mapOf("year" to "2009","month" to "06","day" to "day"))
 //    直接按行 Transformer 模式（最灵活，但是编码最复杂) 按行模式加上行号
     var i = 0
+//    filter 操作可以按照字节,也可以按行过滤
     filter {
         "==${i++}->${it}"
     }

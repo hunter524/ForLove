@@ -32,7 +32,7 @@ gradle.addListener(object:BuildListener{
 })
 
 println("load setting script")
-rootProject.name = "excel-op"
+rootProject.name = "gradle-practice"
 // 自定义配置 --build-cache 的缓存位置
 buildCache{
     local<DirectoryBuildCache> {

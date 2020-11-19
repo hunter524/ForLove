@@ -1,5 +1,10 @@
 expand SimpleTemplateEngine Groovy 模板引擎模式
 $year <%= month %> ${ day ? "day":"noday" }
+(GString 模式) / JSP 替换模式 / GString 表达式模式
 
 Ant Style 的替换模式
 @year@ @month@ @day@
+filter 使用 org.apache.tools.ant.filters.ReplaceTokens::class 该类型的 FilterReader 模式
+并且需要提供 "tokens" to mapOf("year" to "2009","month" to "06","day" to "day") 参数才可以进行替换
+
+执行该 copy 时替换指定内容的任务为 cpfilter
